@@ -1,6 +1,6 @@
 DIRS=$(sort $(dir $(wildcard */)))
-RUNS=$(DIRS:%/=%_run)
-TESTS=$(DIRS:%/=%_test)
+APPS=$(filter-out target,$(DIRS:%/=%))
+TESTS=$(APPS:%=%_test)
 
 push:
 	@git add .; git commit -a -n -m "${msg}"; git push;
@@ -11,11 +11,11 @@ format:
 lint:
 	@cargo clippy --all-targets --all-features -- -D warnings
 
-$(RUNS): format
-	@RUST_BACKTRACE=1 cargo run --bin $(subst _run,,$@)
+$(APPS): format
+	@RUST_BACKTRACE=1 cargo run --bin $@
 
 $(TESTS):
 	@cargo test --bin $(subst _test,,$@)
 
 
-.PHONY: $(RUNS) $(TESTS)
+.PHONY: $(APPS) $(TESTS)
