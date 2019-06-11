@@ -8,3 +8,7 @@ version = "0.1.0"
 name = "ds"
 version = "0.1.0"
 
+[[package]]
+name = "enum_test"
+version = "0.1.0"
+
