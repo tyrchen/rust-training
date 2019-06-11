@@ -1,4 +1,3 @@
-
 use std::collections::HashMap;
 
 pub fn run() {
@@ -12,18 +11,25 @@ pub fn run() {
 
   map.insert("my", map_middle);
 
-  match map.get("my") {
-    Some(result) => match result.get("greeting") {
-      Some(result1) => match result1.get("hello") {
-        Some(result2) => println!("result is {:?}", result2),
-        None => println!("None"),
-      },
-      None => (),
+  // better way to deal with nested option
+  let v = map
+    .get("my1")
+    .and_then(|h| h.get("greeting"))
+    .and_then(|h| h.get("hello"));
 
-      None => (),
-    },
-    None => println!("No key found!"),
-  }
+  println!("Result is {}", v.unwrap_or(&"Not found"));
+  // match map.get("my") {
+  //   Some(result) => match result.get("greeting") {
+  //     Some(result1) => match result1.get("hello") {
+  //       Some(result2) => println!("result is {:?}", result2),
+  //       None => println!("None"),
+  //     },
+  //     None => (),
+
+  //     None => (),
+  //   },
+  //   None => println!("No key found!"),
+  // }
 
   println!("map is: {:?}", map);
 }
