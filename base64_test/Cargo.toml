@@ -1,0 +1,9 @@
+[package]
+name = "base64_test"
+version = "0.1.0"
+authors = ["Tyr Chen <tyr.chen@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+base64 = "0.10.1"
+byteorder = "1.3.2"

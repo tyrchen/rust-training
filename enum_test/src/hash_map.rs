@@ -13,8 +13,8 @@ pub fn run() {
 
   // better way to deal with nested option
   let v = map
-    .get("my1")
-    .and_then(|h| h.get("greeting"))
+    .get("my")
+    .and_then(|h| h.get("greeting1"))
     .and_then(|h| h.get("hello"));
 
   println!("Result is {}", v.unwrap_or(&"Not found"));
