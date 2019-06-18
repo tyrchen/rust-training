@@ -15,7 +15,7 @@ $(APPS): format
 	@RUST_BACKTRACE=1 cargo run --bin $@
 
 $(TESTS):
-	@cargo test --bin $(subst _test,,$@)
+	@RUST_BACKTRACE=1 cargo test --bin $(subst _test,,$@)
 
 
 .PHONY: $(APPS) $(TESTS)

@@ -1,0 +1,7 @@
+[package]
+name = "common_traits"
+version = "0.1.0"
+authors = ["Tyr Chen <tyr.chen@gmail.com>"]
+edition = "2018"
+
+[dependencies]
