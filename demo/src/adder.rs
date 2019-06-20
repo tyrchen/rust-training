@@ -1,4 +1,3 @@
-
 /// First line is a short summary describing function.
 ///
 /// The next lines present detailed documentation. Code blocks start with
@@ -38,7 +37,6 @@ mod add_test {
   fn div_not_zero_should_work() {
     assert_eq!(div(2.0, 1.0), 2.0);
   }
-
 
   #[test]
   #[should_panic(expected = "should not be zero")]

@@ -1,3 +1,3 @@
 [workspace]
 
-members = ["basic", "common_traits", "demo", "ds", "enum_test", "base64_test"]
+members = ["basic", "common_traits", "demo", "ds", "enum_test", "base64_test", "linklist"]
