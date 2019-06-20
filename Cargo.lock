@@ -42,7 +42,7 @@ name = "enum_test"
 version = "0.1.0"
 
 [[package]]
-name = "linklist"
+name = "smart_pointer"
 version = "0.1.0"
 
 [metadata]

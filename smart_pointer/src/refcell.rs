@@ -17,9 +17,9 @@ pub fn run() {
   let c = Cons(Rc::new(RefCell::new(10)), Rc::clone(&a));
 
   let mut a1 = value.borrow_mut();
-  let mut a2 = value.borrow_mut();
+  // let mut a2 = value.borrow_mut();
   *a1 += 10;
-  *a2 += 10;
+  // *a2 += 10;
 
   println!("a after = {:?}", a);
   println!("b after = {:?}", b);

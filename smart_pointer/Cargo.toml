@@ -1,5 +1,5 @@
 [package]
-name = "linklist"
+name = "smart_pointer"
 version = "0.1.0"
 authors = ["Tyr Chen <tyr.chen@gmail.com>"]
 edition = "2018"
