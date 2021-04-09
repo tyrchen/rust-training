@@ -1,21 +1,21 @@
-DIRS=$(sort $(dir $(wildcard */)))
-APPS=$(filter-out target,$(DIRS:%/=%))
-TESTS=$(APPS:%=%_test)
+MARP=marp --theme $(ASSET_DIR)/custom.css
 
-push:
-	@git add .; git commit -a -n -m "${msg}"; git push;
+TOP_DIR=.
+SRC_DIR=$(TOP_DIR)/slides
+TARGET_DIR=$(TOP_DIR)/_build
+ASSET_DIR=$(TOP_DIR)/assets
 
-format:
-	@cargo fmt --all
+run:
+	@$(MARP) -s $(SRC_DIR)
 
-lint:
-	@cargo clippy --all-targets --all-features -- -D warnings
+build: $(TARGET_DIR) copy-assets
+	@$(MARP) -I $(SRC_DIR) -o _build
 
-$(APPS): format
-	@RUST_BACKTRACE=1 cargo run --bin $@
+build-pdf: build
+	@$(MARP) -I $(SRC_DIR) -o _build --allow-local-files --pdf
 
-$(TESTS):
-	@RUST_BACKTRACE=1 cargo test --bin $(subst _test,,$@)
+copy-assets:
+	@rsync -arv $(SRC_DIR)/images $(TARGET_DIR)
 
-
-.PHONY: $(APPS) $(TESTS)
+$(TARGET_DIR):
+	@mkdir -p $@
