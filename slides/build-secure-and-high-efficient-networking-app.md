@@ -10,18 +10,6 @@ theme: uncover
 
 ---
 
-### Rust 对网络协议的支持
-
----
-
-![bg fit](images/network.png)
-
----
-
-![bg fit](images/network1.png)
-
----
-
 ### 当我们谈论网络安全的时候，我们在谈论什么？
 
 ![bg right fit](images/security.png)
@@ -166,6 +154,7 @@ application_key = HMAC-BLAKE2s(key=master_key, "app info, e.g. yourname@gmail.co
 
 - [tokio tls helper](https://github.com/tyrchen/tokio-tls-helper)
 - [Noise 框架：构建安全协议的蓝图](https://zhuanlan.zhihu.com/p/96944134)
+- [Cellar: 分层确定性密钥管理](https://github.com/tyrchen/cellar)
 - [Conceal：使用 Noise protocol 做文件加密](https://github.com/tyrchen/conceal)
 
 ---
