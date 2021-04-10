@@ -1,6 +1,5 @@
 ---
 marp: true
-title: '构建安全高性能的网络应用'
 paginate: false
 _paginate: false
 theme: uncover
