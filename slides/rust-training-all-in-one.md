@@ -32,7 +32,174 @@ theme: uncover
 
 ---
 
-![bg fit](images/programming_lang.jpg)
+### Let's talk about values and tradeoffs first
+
+<style scoped>
+    ul { columns: 3; width: 90%; }
+</style>
+
+- Approachability
+- Availability
+- Compatibility
+- Composability
+- Debuggability
+- Expressiveness
+- Extensibility
+- Interoerability
+- Integrity
+- Maintainabiity
+- Measurability
+- Operability
+- Performance
+- Portability
+- Productivity
+- Resilliency
+- Rigor
+- Safety
+- Security
+- Simplicity
+- Stability
+- Thoroughness
+- Transparent
+- Velocity
+
+---
+
+## Erlang/Elixir
+
+<style scoped>
+    ul { columns: 3; width: 90%; color: #ddd; }
+</style>
+
+- Approachability
+- Availability
+- Compatibility
+- Composability
+- Debuggability
+- Expressiveness
+- Extensibility
+- Interoerability
+- Integrity
+- Maintainabiity
+- Measurability
+- Operability
+- _Performance_
+- Portability
+- _Productivity_
+- _Resilliency_
+- Rigor
+- _Safety_
+- Security
+- _Simplicity_
+- Stability
+- Thoroughness
+- Transparent
+- Velocity
+
+---
+
+## Python
+
+<style scoped>
+    ul { columns: 3; width: 90%; color: #ddd; }
+</style>
+
+- _Approachability_
+- Availability
+- Compatibility
+- Composability
+- Debuggability
+- _Expressiveness_
+- Extensibility
+- Interoerability
+- Integrity
+- Maintainabiity
+- Measurability
+- Operability
+- Performance
+- Portability
+- _Productivity_
+- Resilliency
+- Rigor
+- Safety
+- Security
+- _Simplicity_
+- Stability
+- Thoroughness
+- Transparent
+- Velocity
+
+---
+
+## Java (in early days)
+
+<style scoped>
+    ul { columns: 3; width: 90%; color: #ddd; }
+</style>
+
+- Approachability
+- Availability
+- Compatibility
+- Composability
+- Debuggability
+- Expressiveness
+- Extensibility
+- Interoerability
+- Integrity
+- Maintainabiity
+- Measurability
+- Operability
+- _Performance_
+- _Portability_
+- Productivity
+- Resilliency
+- Rigor
+- _Safety (memory)_
+- _Security_
+- Simplicity
+- Stability
+- Thoroughness
+- Transparent
+- Velocity
+
+---
+
+## Rust
+
+
+<style scoped>
+    ul { columns: 3; width: 90%; color: #ddd; }
+</style>
+
+- Approachability
+- Availability
+- Compatibility
+- Composability
+- Debuggability
+- _Expressiveness_
+- Extensibility
+- Interoerability
+- Integrity
+- Maintainabiity
+- Measurability
+- Operability
+- _Performance_
+- Portability
+- _Productivity_
+- Resilliency
+- Rigor
+- _Safety!!!_
+- Security
+- Simplicity
+- Stability
+- Thoroughness
+- Transparent
+- Velocity
+
+
+---
+
+![bg fit](images/programming_lang1.jpg)
 
 ---
 
@@ -70,17 +237,29 @@ h6 {font-size: 16px;}
 
 ---
 
+## How ownership works?
+
+- Question to ask - Passing value: by ref or by value?
+- Answers from Rust:
+  - A value can only have one owner in a scope
+  - When an owned value is out of scope, it is dropped
+  - A value can have multiple immutable references
+  - A value can have only one mutable reference which is mutual exclsive
+  - A reference cannot outlive its owner
+
+---
+
 ## Concurrency safety
 
 - single-threaded - Javascript: cannot leverage multicore
 - GIL - Python/Ruby: multithreading is notorious inefficient
-- Actor model - Erlang/Akka: at the cost of memory copy
-- CSP - Golang: at the cost of memory copy
-- Ownership + Type System - Rust: very elegant and no extra cost!
+- Actor model - Erlang/Akka: at the cost of memory copy and heap allocation
+- CSP - Golang: at the cost of memory copy and heap allocation
+- Ownership + Type System - Rust: super _elegant_ and _no extra cost_!
 
 ---
 
-## How Rust achieve memory safety and conccurency safety?
+### How Rust actually achieves memory safety and conccurency safety?
 
 ---
 
@@ -88,10 +267,20 @@ h6 {font-size: 16px;}
 
 ---
 
+## Show me the code!
+---
+
 <!-- _backgroundColor: #1e1e1e -->
 <!-- _color: #e1e1e1 -->
 
 ![bg fit](images/rust_safety.png)
+
+---
+
+<!-- _backgroundColor: #1e1e1e -->
+<!-- _color: #e1e1e1 -->
+
+![bg fit](images/rust_safety1.png)
 
 ---
 
@@ -107,6 +296,7 @@ h6 {font-size: 18px; margin-top: 40px;}
 - One and only one owner
 - Multiple immutable references
 - mutable reference is mutual exclsive
+- Reference cannot outlive owner
 - _use type safety for thread safety_
 
 ###### With these simple rules, Rust achieved safety with
@@ -116,9 +306,12 @@ h6 {font-size: 18px; margin-top: 40px;}
 
 ## Zero Cost Abstraction
 
-###### _Rust way of searching for solutions_
+###### _Rust way of solving problems_
+
+
 
 ---
+
 
 ---
 
