@@ -65,7 +65,7 @@ theme: uncover
 
 ---
 
-## Erlang/Elixir
+## C
 
 <style scoped>
     ul { columns: 3; width: 90%; color: #ddd; }
@@ -85,7 +85,39 @@ theme: uncover
 - Operability
 - _Performance_
 - Portability
-- _Productivity_
+- Productivity
+- Resilliency
+- Rigor
+- Safety
+- Security
+- _Simplicity_
+- Stability
+- Thoroughness
+- _Transparent_
+- Velocity
+---
+
+## Erlang/Elixir
+
+<style scoped>
+    ul { columns: 3; width: 90%; color: #ddd; }
+</style>
+
+- Approachability
+- Availability
+- Compatibility
+- Composability
+- Debuggability
+- Expressiveness
+- Extensibility
+- Interoerability
+- Integrity
+- Maintainabiity
+- Measurability
+- Operability
+- Performance
+- Portability
+- __Productivity__
 - _Resilliency_
 - Rigor
 - _Safety_
@@ -219,7 +251,7 @@ h6 {font-size: 16px;}
 
 ---
 
-## Why safety is hard?
+## Safety is hard!
 
 - memory safety is not easy (you need to understand the corner cases)
 - conccurency safety is really hard (without certain tradeoffs)
@@ -237,18 +269,6 @@ h6 {font-size: 16px;}
 
 ---
 
-## How ownership works?
-
-- Question to ask - Passing value: by ref or by value?
-- Answers from Rust:
-  - A value can only have one owner in a scope
-  - When an owned value is out of scope, it is dropped
-  - A value can have multiple immutable references
-  - A value can have only one mutable reference which is mutual exclsive
-  - A reference cannot outlive its owner
-
----
-
 ## Concurrency safety
 
 - single-threaded - Javascript: cannot leverage multicore
@@ -259,7 +279,11 @@ h6 {font-size: 16px;}
 
 ---
 
-### How Rust actually achieves memory safety and conccurency safety?
+#### How Rust achieves
+
+### _memory and conccurency safety_
+
+#### without extra cost?
 
 ---
 
@@ -304,45 +328,81 @@ h6 {font-size: 18px; margin-top: 40px;}
 
 ---
 
-## Zero Cost Abstraction
-
-###### _Rust way of solving problems_
-
-
+## How's Productivity of Rust?
 
 ---
 
+<!-- _backgroundColor: #1e1e1e -->
+<!-- _color: #e1e1e1 -->
+
+![bg fit](images/rust_expressiveness.jpg)
 
 ---
 
-## Let's go to basics about types
+## Things built with Rust
 
-- can be used any number of times
-  - Other languages: this is how we works
-  - Rust: Copy / Clone
-- can't be used more than once
-  - Other lanugages: ??
-  - Rust: move semantics
-- must be used at least once
-  - Other lanugages: linter will detect that, hopefully
-  - `unused_variables`, `unused_assignments`, `unused_must_use`
-- must be used exactly once
+![height:400px](images/built_with_rust.jpg)
 
 ---
+
+## Should I use Rust?
+
+- Rust is ideal when you need a system that reliable and performant
+- Sometimes you don't, sometimes you do, sometimes you need that later
+- it's all about tradeoffs
+
+---
+
+## Rust for our use cases
+
+- parts of the system that are bottlenecks
+  - bottleneck on computation
+  - bottleneck on memory consumption
+  - bootleneck on I/O
+- parser/decoder/encoder
+- wants to leverage existingC/C++/Rust ecosystem (e.g. you need blake3 for hashing)
+
+---
+
+### Is Rust really that hard to learn?
+
+![height:500px](images/rust_learning_curve.png)
+
+---
+
+## Rust is explicit
+
+- Lots of knowledge about computer science is suddenly explicit to you
+- If all your pain to learn a lang is 100%:
+  - Rust:
+    - Compiler help to reduce that to 90%
+    - Then you suffer 70% the pains in first 3-6 months
+    - Then the rest 20% in 3-5 years
+  - Other:
+    - You suffer 10-30% in first 3-6 months
+    - Then 70%-90% in next 3-5 years
+---
+
+<style scoped>
+    ul { columns: 2; width: 90%; color: #ddd; }
+</style>
 
 ## References
 
 - [The pain of real linear types in Rust](https://gankra.github.io/blah/linear-rust/)
 - [Substructural type system](https://en.wikipedia.org/wiki/Substructural_type_system)
+- [Rust official book](https://doc.rust-lang.org/book/)
+- [Rust official site](https://www.rust-lang.org/)
+- [Awesome Rust](https://github.com/rust-unofficial/awesome-rust)
+- [Are we web yet?](https://www.arewewebyet.org/)
+- [Are we async yet?](https://areweasyncyet.rs/)
+- [Are we gui yet?](https://www.areweguiyet.com/)
+- [Are we learning yet?](http://www.arewelearningyet.com/)
+- [Are we game yet?](https://arewegameyet.rs/)
+- [Are we quantum yet?](https://arewequantumyet.github.io/)
+- [Are we IDE yet?](https://areweideyet.com/)
 
 ---
-
-
----
-
-## About memory safety
-
-- C/C++
 
 
 ---
