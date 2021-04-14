@@ -364,13 +364,17 @@ h6 {font-size: 18px; margin-top: 40px;}
 
 ---
 
-### Is Rust really that hard to learn?
+## The common misunderstandings
+
+---
+
+### 1. Rust is super hard to learn...
 
 ![height:500px](images/rust_learning_curve.png)
 
 ---
 
-## Rust is explicit
+### Rust is explicit
 
 - Lots of knowledge about computer science is suddenly explicit to you
 - If all your pain to learn a lang is 100%:
@@ -381,6 +385,12 @@ h6 {font-size: 18px; margin-top: 40px;}
   - Other:
     - You suffer 10-30% in first 3-6 months
     - Then 70%-90% in next 3-5 years
+---
+
+### 2. I'm worries about unsafe Rust...
+
+![height:500px](images/unsafe_rust.jpg)
+
 ---
 
 <style scoped>
