@@ -328,6 +328,12 @@ h6 {font-size: 18px; margin-top: 40px;}
 
 ---
 
+## A glance at Rust Type System
+
+![height:500px](images/rust_type_system.jpg)
+
+---
+
 ## How's Productivity of Rust?
 
 ---
@@ -364,6 +370,22 @@ h6 {font-size: 18px; margin-top: 40px;}
 
 ---
 
+## Rust FFI
+
+![height:400px](images/rust_ffi.jpg)
+
+---
+
+## Learning rust as a(n)...
+
+- Elixir eng: ownership model, type system, oh no mutation
+- Scala eng: ownership model, oh no mutation
+- Typescript eng: ownership model, multi-threaded programming
+- Swift/Java eng: ownership model
+- Python eng: ownership model, type system
+
+---
+
 ## The common misunderstandings
 
 ---
@@ -387,7 +409,7 @@ h6 {font-size: 18px; margin-top: 40px;}
     - Then 70%-90% in next 3-5 years
 ---
 
-### 2. I'm worries about unsafe Rust...
+### 2. Unsafe Rust is evil...
 
 ![height:500px](images/unsafe_rust.jpg)
 
