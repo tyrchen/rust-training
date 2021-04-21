@@ -1,0 +1,8 @@
+[workspace]
+
+members = [
+  # tests
+  "code/lifetime",
+  "code/strtok",
+  "code/simple_asm",
+]

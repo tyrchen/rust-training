@@ -456,14 +456,34 @@ h6 {font-size: 18px; margin-top: 40px;}
 
 #### Lifetime: Stack memory
 
-![bg right:65% fit](images/arm_stack.png)
-![bg fit](images/stack_lifetime.jpg)
+```c
+#include <stdio.h>
+static int VALUE = 42;
+
+void world(char *st, int num) {
+    printf("%s(%d)\n", st, num);
+}
+
+
+void hello(int num) {
+    char *st = "hello world";
+    int v = VALUE+num;
+    world(st, v);
+}
+
+int main() {
+    hello(2);
+}
+
+```
+
+![bg right fit](images/stack_lifetime.jpg)
 
 ---
 
 #### Lifetime: Heap memory (tracing GC)
 
-![bg  right:65% fit](images/tracing_gc.jpg)
+![bg  right:60% fit](images/tracing_gc.jpg)
 
 ---
 
@@ -473,7 +493,7 @@ h6 {font-size: 18px; margin-top: 40px;}
 
 ---
 
-## How Rust handles lifecycle?
+## How Rust handles lifetime?
 
 ---
 
@@ -486,7 +506,7 @@ h6 {font-size: 18px; margin-top: 40px;}
 
 ---
 
-### Immutable Borrow
+### What a bout Borrow?
 
 Think about: why does this work in Rust, but not C/C++?
 
@@ -496,7 +516,13 @@ Think about: why does this work in Rust, but not C/C++?
 
 ---
 
-### Benefit of lifetime-contrained borrow
+#### Rust lifetime checker prevents this...
+
+![height:500px](images/borrow_cross_threads.jpg)
+
+---
+
+### Benefit of lifetime-constrained borrow
 
 - can borrow anything (stack object, heap object)
 - safety can be guaranteed at compile-time (no runtime lifetime bookkeeping)
@@ -579,8 +605,15 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 - file
 - socket
 - lock
-- any resources
+- any other OS resources
 
+---
+
+## demo
+
+---
+
+![bg fit](images/strtok.jpg)
 
 ---
 
@@ -593,6 +626,19 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 - Fearless Refactoring
 - reinforce properties well-behaved software exhibits
 - sometimes too strict: rust isn't dogmatic about enforcing it
+
+---
+
+## References
+
+- [Mark-And-Sweep (Garbage Collection Algorithm)](https://www.linkedin.com/pulse/mark-and-sweep-garbage-collection-algorithm-saral-saxena/)
+- [Tracing garbage collection](https://en.wikipedia.org/wiki/Tracing_garbage_collection)
+- [Swift: Avoiding Memory Leaks by Examples](https://medium.com/hackernoon/swift-avoiding-memory-leaks-by-examples-f901883d96e5)
+- [Reference counting](https://en.wikipedia.org/wiki/Reference_counting)
+- [Fearless concurrency with Rust](https://blog.rust-lang.org/2015/04/10/Fearless-Concurrency.html)
+- [Rust means never having to close a socket](https://blog.skylight.io/rust-means-never-having-to-close-a-socket/)
+- [Programming Rust: ownership](https://www.oreilly.com/library/view/programming-rust/9781491927274/ch04.html)
+- [Crust of Rust: lifetime annotation (recommended)](https://www.youtube.com/watch?v=rAl-9HwD858)
 
 ---
 
@@ -614,17 +660,6 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 - Use after free: no more (reference can't point to dropped value)
 - Buffer underruns, overflows, illegal memory access: no more (reference must be valid and point to owned value)
 - memory level data races: no more (single writer or multiple readers)
-
----
-
-## References
-
-- [Mark-And-Sweep (Garbage Collection Algorithm)](https://www.linkedin.com/pulse/mark-and-sweep-garbage-collection-algorithm-saral-saxena/)
-- [Tracing garbage collection](https://en.wikipedia.org/wiki/Tracing_garbage_collection)
-- [Swift: Avoiding Memory Leaks by Examples](https://medium.com/hackernoon/swift-avoiding-memory-leaks-by-examples-f901883d96e5)
-- [Reference counting](https://en.wikipedia.org/wiki/Reference_counting)
-- [Fearless concurrency with Rust](https://blog.rust-lang.org/2015/04/10/Fearless-Concurrency.html)
-- [Rust means never having to close a socket](https://blog.skylight.io/rust-means-never-having-to-close-a-socket/)
 
 ---
 
