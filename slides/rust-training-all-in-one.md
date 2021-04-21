@@ -10,7 +10,7 @@ theme: uncover
 </style>
 
 - [High-level intro about Rust](#2)
-- Ownership, borrow check, and lifetime
+- [Ownership, borrow check, and lifetime](#35)
 - Typesystem and data structures
 - Concurrency - primitives
 - Concurrency - async/await
