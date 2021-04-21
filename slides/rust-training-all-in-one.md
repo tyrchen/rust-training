@@ -433,9 +433,7 @@ h6 {font-size: 18px; margin-top: 40px;}
 - [Are we game yet?](https://arewegameyet.rs/)
 - [Are we quantum yet?](https://arewequantumyet.github.io/)
 - [Are we IDE yet?](https://areweideyet.com/)
-
----
-
+- [Rust is for Professionals](https://gregoryszorc.com/blog/2021/04/13/rust-is-for-professionals/)
 
 ---
 
@@ -446,10 +444,203 @@ h6 {font-size: 18px; margin-top: 40px;}
 
 ---
 
+### Ownership/Borrow Rules Review
+
+![height:500px](images/ownership.jpg)
+
+---
+
+## Lifetime, not a new idea
+
+---
+
+#### Lifetime: Stack memory
+
+![bg right:65% fit](images/arm_stack.png)
+![bg fit](images/stack_lifetime.jpg)
+
+---
+
+#### Lifetime: Heap memory (tracing GC)
+
+![bg  right:65% fit](images/tracing_gc.jpg)
+
+---
+
+#### Lifetime: Heap memory (ARC)
+
+![bg right:65% fit](images/arc.png)
+
+---
+
+## How Rust handles lifecycle?
+
+---
+
+### Move semantics
+
+---
+
+![bg fit](images/rust_memory.jpg)
+
+
+---
+
+### Immutable Borrow
+
+Think about: why does this work in Rust, but not C/C++?
+
+---
+
+![bg fit](images/rust_memory_ref.jpg)
+
+---
+
+### Benefit of lifetime-contrained borrow
+
+- can borrow anything (stack object, heap object)
+- safety can be guaranteed at compile-time (no runtime lifetime bookkeeping)
+- Rust borrow checker is mostly a lifetime checker
+
+---
+
+### Lifetime Annotation
+
+- similar as generics, but in lowercase starting with `'`
+- only need to put annotation when there's conflicts
+
+```rust
+// need explicit lifetime
+struct User<'a> {
+    name: &'a str,
+    ...
+}
+fn process<T, 'a, 'b>(item1: &'a T, item2: &'b T) {}
+
+// &'a User could be written as &User since on confliction
+fn lifetime_example(user: &User) { // --+ Lifetime 'a
+    if user.is_authed() {          //   |--+ Lifetime 'b
+        let role = user.roles();   //   |  |
+                                   //   |  |--+ Lifetime 'c
+        verify(&role);             //   |  |  |
+                                   //   |  |--+
+    }                              //   |--+
+}                                  // --+
+
+fn verify(x: &Role) { /*...*/ }
+```
+
+---
+
+### Static Lifetime
+
+- 'static
+- data included in bss / data / text section
+  - constants / static variables
+  - string literals
+  - functions
+- if used as trait bound:
+  - the type does not contain any non-static references
+  - owned data always passes a `'static` lifetime bound, but reference to the owned data does not
+
+---
+
+## Thread spawn
+
+<style scoped>
+    p { font-size: 24px; }
+</style>
+
+```rust
+pub fn spawn<F, T>(f: F) -> JoinHandle<T>
+where
+    F: FnOnce() -> T,
+    F: Send + 'static,
+    T: Send + 'static,
+{
+    Builder::new().spawn(f).expect("failed to spawn thread")
+}
+```
+
+The 'static constraint is a way of saying, roughly, that no borrowed data is permitted in the closure.
+
+---
+
+### RAII (Resource Acquisition Is Initialization)
+
+- initializing the object will also make sure resource is initialized
+- releasing the object will also make sure resource is released
+
+---
+
+### Drop Trait
+
+- memory
+- file
+- socket
+- lock
+- any resources
+
+
+---
+
+## Mental model
+
+- write the code and defer the complexity about ensuring the code is safe/correct
+- comfront the most of the safety/correctness problems upfront
+- Mutate can only happen when you own the data, or you have a mutable reference
+  - either way, the thread is guaranteed to be the only one with access at a time
+- Fearless Refactoring
+- reinforce properties well-behaved software exhibits
+- sometimes too strict: rust isn't dogmatic about enforcing it
+
+---
+
+## Cost of defects
+
+- Don't introduce defect (this is impossible because humans are fallible).
+- Detect and correct defect as soon as the bad key press occurs (within reason: you don't want the programmer to lose too much flow) (milliseconds later).
+- At next build / test time (seconds or minutes later).
+- When code is shared with others (maybe you push a branch and CI tells you something is wrong) (minutes to days later).
+- During code review (minutes to days later).
+- When code is integrated (e.g. merged) (minutes to days later).
+- When code is deployed (minutes to days or even months later).
+- When a bug is reported long after the code has been deployed (weeks to years later).
+
+---
+
+## Ownership and Borrow rules
+
+- Use after free: no more (reference can't point to dropped value)
+- Buffer underruns, overflows, illegal memory access: no more (reference must be valid and point to owned value)
+- memory level data races: no more (single writer or multiple readers)
+
+---
+
+## References
+
+- [Mark-And-Sweep (Garbage Collection Algorithm)](https://www.linkedin.com/pulse/mark-and-sweep-garbage-collection-algorithm-saral-saxena/)
+- [Tracing garbage collection](https://en.wikipedia.org/wiki/Tracing_garbage_collection)
+- [Swift: Avoiding Memory Leaks by Examples](https://medium.com/hackernoon/swift-avoiding-memory-leaks-by-examples-f901883d96e5)
+- [Reference counting](https://en.wikipedia.org/wiki/Reference_counting)
+- [Fearless concurrency with Rust](https://blog.rust-lang.org/2015/04/10/Fearless-Concurrency.html)
+- [Rust means never having to close a socket](https://blog.skylight.io/rust-means-never-having-to-close-a-socket/)
+
+---
+
 <!-- _backgroundColor: #264653 -->
 <!-- _color: #e1e1e1 -->
 
 ## Typesystem and data structures
+
+---
+
+- The type system is relatively strong and prevents many classes of bugs.
+- The borrow checker and the rules it enforces prevent safety issues at compile time. Some of these violations can be detected by other languages' compilers. However, in many cases sufficient auditing (like {address, memory, thread} sanitizers) is run much less frequently, often only in CI tests, which can be hours or days later.
+- Invariants can be encoded and enforced in the type system through features like enums being algebraic data types.
+- Variables are immutable by default and must be explicitly annotated as mutable. This forces you to think about where and how data mutation occurs, enabling you to spot issues sooner.
+- Option<T> significantly curtails the billion dollar mistake.
+- Result<T, E> forces you to reckon about handling errors.
 
 ---
 
