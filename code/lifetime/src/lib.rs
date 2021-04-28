@@ -30,3 +30,10 @@ mod tests {
         println!("user: {:?}", user);
     }
 }
+
+
+use std::io::Write;
+struct Sink;
+impl Write for Sink {
+
+}

@@ -670,17 +670,106 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 
 ---
 
-- The type system is relatively strong and prevents many classes of bugs.
-- The borrow checker and the rules it enforces prevent safety issues at compile time. Some of these violations can be detected by other languages' compilers. However, in many cases sufficient auditing (like {address, memory, thread} sanitizers) is run much less frequently, often only in CI tests, which can be hours or days later.
-- Invariants can be encoded and enforced in the type system through features like enums being algebraic data types.
-- Variables are immutable by default and must be explicitly annotated as mutable. This forces you to think about where and how data mutation occurs, enabling you to spot issues sooner.
-- Option<T> significantly curtails the billion dollar mistake.
-- Result<T, E> forces you to reckon about handling errors.
+![bg fit](images/rust_type_system.jpg)
+
+---
+
+### Memory layout
+
+---
+
+![bg fit](images/rust_type.png)
+
+---
+
+
+## Why not object oriented?
+
+---
+
+### Class is awesome
+
+![bg left fit](images/classes.png)
+
+- Encapsulation
+- Access control
+- Abstraction
+- Namespace
+- Extensibility
+
+---
+
+### Class has problems
+
+- inheritance is pretty limited - choose superclass well!
+- know what/how to override (and when not to)
+- superclass may have properties
+  - you have to accept it
+  - initialization burden
+  - don't break assumptions of superclass
+- hard to reuse outside the hierachy (composition over inheritance)
+
+---
+
+## Solution: Trait (Typeclass)
+
+---
+
+![bg fit](images/rust_trait1.jpg)
+
+---
+
+### Trait Object
+
+- Unlike java, you can't assign a value to a trait (no implicit reference!!!)
+- trait object is a fat pointer (automatically converted)
+  - normal pointer reference to the value
+  - vtable (vtable pointer)
+    - unlike C++, it is not a ptr in struct
+- dynamic dispatch
+
+
+![bg fit left](images/trait_object.jpg)
+
+---
+
+<!-- _backgroundColor: #1e1e1e -->
+<!-- _color: #e1e1e1 -->
+
+
+![bg fit](images/trait_formatter.jpg)
+
+---
+
+#### More about trait
+
+- associated type
+- generics
+- supertrait
+- trait composition
+
+![bg left fit](images/trait_choices.jpg)
+
+---
+
+## Polymorphism
+
+### _Generics_ & __Trait__
+
+
 
 ---
 
 <!-- _backgroundColor: #264653 -->
 <!-- _color: #e1e1e1 -->
+
+---
+
+## References
+
+
+- [All about trait objects](https://brson.github.io/rust-anthology/1/all-about-trait-objects.html)
+---
 
 ## Concurrency - primitives
 
