@@ -11,7 +11,7 @@ theme: uncover
 
 - [High-level intro about Rust](#2)
 - [Ownership, borrow check, and lifetime](#35)
-- Typesystem and data structures
+- [Typesystem and data structures](#59)
 - Concurrency - primitives
 - Concurrency - async/await
 - Networking and security
@@ -752,16 +752,7 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 
 ---
 
-## Polymorphism
-
-### _Generics_ & __Trait__
-
-
-
----
-
-<!-- _backgroundColor: #264653 -->
-<!-- _color: #e1e1e1 -->
+## Generics
 
 ---
 
