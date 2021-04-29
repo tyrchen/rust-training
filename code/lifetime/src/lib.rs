@@ -6,7 +6,11 @@ struct User<'a> {
 
 impl<'a> User<'a> {
     // doesn't work since lifetime differs (cannot guarantee 'b > 'a)
-    pub fn new<'b>(name: &'b str, age: u8) -> Self {
+    // pub fn new<'b>(name: &'b str, age: u8) -> Self {
+    //     Self { name, age }
+    // }
+
+    pub fn new(name: &'a str, age: u8) -> Self {
         Self { name, age }
     }
 }
@@ -22,18 +26,11 @@ mod tests {
         assert_eq!(user.name, "Alice");
         let user_ref = &mut user;
 
-        {
-            let name = String::from("Bob");
-            user_ref.name = name.as_str();
-        }
+        // { // not live long enough
+        //     let name = String::from("Bob");
+        //     user_ref.name = name.as_str();
+        // }
 
         println!("user: {:?}", user);
     }
-}
-
-
-use std::io::Write;
-struct Sink;
-impl Write for Sink {
-
 }

@@ -4,5 +4,6 @@ members = [
   # tests
   "code/lifetime",
   "code/strtok",
+  "code/gp",
   "code/simple_asm",
 ]

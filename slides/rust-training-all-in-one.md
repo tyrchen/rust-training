@@ -11,7 +11,7 @@ theme: uncover
 
 - [High-level intro about Rust](#2)
 - [Ownership, borrow check, and lifetime](#35)
-- [Typesystem and data structures](#59)
+- [Typesystem and Generic Programming](#59)
 - Concurrency - primitives
 - Concurrency - async/await
 - Networking and security
@@ -666,7 +666,7 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 <!-- _backgroundColor: #264653 -->
 <!-- _color: #e1e1e1 -->
 
-## Typesystem and data structures
+## Typesystem and Generic Programming
 
 ---
 
@@ -674,7 +674,7 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 
 ---
 
-### Memory layout
+### How types are layed out in memory?
 
 ---
 
@@ -756,10 +756,72 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 
 ---
 
+### History of Generic Programming
+
+![width:1200px](images/why_generics.jpg)
+
+(from: [Fundamentals of Generic Programming](http://stepanovpapers.com/DeSt98.pdf))
+
+---
+
+### Classification of Abstractions
+
+- _Data Abstractions_: data types and sets of operations defined on them
+  - e.g. `Vec<T>`, `HashMap<K, V>`
+- _Algorithmic abstrations_: families of data abstractions that have a set of efficient algorithms in common (generic algorithms)
+  - e.g. `quicksort`, `binary_search`
+- _Structural abstractions_: a data abstraction A belongs to a structural abstraction S if and only if S is an intersection of some of the algorithmic abstractions to which A belongs.
+  - e.g. singly-linked-lists
+- _Representational abstractions_: mappings from one structural abstration to another, creating a new type and implementing a set of operations on that type.
+  - e.g. `VecDeque<T>`
+- Comes from: Generic Programming: http://stepanovpapers.com/genprog.pdf
+
+---
+
+### _Generics_ to __Types__
+
+just like
+###  _Types_ to __Values__
+
+
+---
+
+<!-- _backgroundColor: #000 -->
+![bg fit](images/add1.png)
+
+---
+
+<!-- _backgroundColor: #000 -->
+![bg fit](images/add2.png)
+
+---
+
+![bg fit](images/rust_gp.jpg)
+
+---
+
+### Generic Programming Example
+
+![width:1200px](images/binary_search.jpg)
+
+---
+
+## Realworld GP example
+
+---
+
+![bg fit](images/gp_example.jpg)
+
+---
+
 ## References
 
 
 - [All about trait objects](https://brson.github.io/rust-anthology/1/all-about-trait-objects.html)
+- [Protocol-oriented programming in swift](https://www.youtube.com/watch?v=xE5EcHuz52I&ab_channel=ThuyLuongThi)
+- [Generic Data Types](https://doc.rust-lang.org/book/ch10-01-syntax.html)
+- [Generics (Rust by Example)](https://doc.rust-lang.org/beta/rust-by-example/generics.html)
+
 ---
 
 ## Concurrency - primitives
