@@ -682,36 +682,7 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 
 ---
 
-
-## Why not object oriented?
-
----
-
-### Class is awesome
-
-![bg left fit](images/classes.png)
-
-- Encapsulation
-- Access control
-- Abstraction
-- Namespace
-- Extensibility
-
----
-
-### Class has problems
-
-- inheritance is pretty limited - choose superclass well!
-- know what/how to override (and when not to)
-- superclass may have properties
-  - you have to accept it
-  - initialization burden
-  - don't break assumptions of superclass
-- hard to reuse outside the hierachy (composition over inheritance)
-
----
-
-## Solution: Trait (Typeclass)
+## Trait (Typeclass)
 
 ---
 
@@ -725,7 +696,7 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 - trait object is a fat pointer (automatically converted)
   - normal pointer reference to the value
   - vtable (vtable pointer)
-    - unlike C++, it is not a ptr in struct
+    - unlike C++/Java, it is not a ptr in struct
 - dynamic dispatch
 
 
@@ -804,6 +775,8 @@ just like
 
 ![width:1200px](images/binary_search.jpg)
 
+demo: [rust implmentation](https://github.com/tyrchen/rust-training/blob/master/code/gp/src/lib.rs)
+
 ---
 
 ## Realworld GP example
@@ -814,6 +787,12 @@ just like
 
 ---
 
+> Functions delay binding: data structures induce binding.
+> Moral: Structure data late in the programming process.
+>
+> — Epigrams on programming
+---
+
 ## References
 
 
@@ -821,6 +800,34 @@ just like
 - [Protocol-oriented programming in swift](https://www.youtube.com/watch?v=xE5EcHuz52I&ab_channel=ThuyLuongThi)
 - [Generic Data Types](https://doc.rust-lang.org/book/ch10-01-syntax.html)
 - [Generics (Rust by Example)](https://doc.rust-lang.org/beta/rust-by-example/generics.html)
+
+---
+
+## Why not object oriented?
+
+---
+
+### Class is awesome
+
+![bg left fit](images/classes.png)
+
+- Encapsulation
+- Access control
+- Abstraction
+- Namespace
+- Extensibility
+
+---
+
+### Class has problems
+
+- inheritance is pretty limited - choose superclass well!
+- know what/how to override (and when not to)
+- superclass may have properties
+  - you have to accept it
+  - initialization burden
+  - don't break assumptions of superclass
+- hard to reuse outside the hierachy (composition over inheritance)
 
 ---
 
