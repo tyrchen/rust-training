@@ -1062,7 +1062,9 @@ impl<T> Lock<T> {
 
 ---
 
-### Demo code: A well-behaved HTTP client
+### Demo code: restricted HTTP client
+
+[code/primitives/src/http_semaphore.rs](https://github.com/tyrchen/rust-training/blob/master/code/primitives/src/http_semaphore.rs)
 
 ---
 
@@ -1093,15 +1095,19 @@ impl<T> Lock<T> {
 
 ---
 
-### Demo code: naive MPSC implementation
+### Demo code: naive MPSC
+
+[code/primitives/src/channel.rs](https://github.com/tyrchen/rust-training/blob/master/code/primitives/src/channel.rs)
 
 ---
 
-### Demo code: implement actor with channel
+### Demo code: naive actor
 
 - Questions:
+  - Which type of channel shall we use? SPSC, SPMC, MPSC?
   - When creating an actor, what is its `pid`?
   - When sending a message to an actor, how the actor reply (`handle_call`)?
+- Code: [code/primitives/src/actor.rs](https://github.com/tyrchen/rust-training/blob/master/code/primitives/src/actor.rs)
 
 ---
 
