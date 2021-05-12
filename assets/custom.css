@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=BioRhyme&display=swap');
-/* @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap'); */
-/* @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap'); */
-@import url('https://fonts.googleapis.com/css?family=Cairo&display=swap');
+/* @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Cairo&display=swap'); */
 
 
 
@@ -14,10 +14,11 @@
  * @auto-scaling fittingHeader,math
  * @size 4:3 960px 720px
  */
+
 section {
   display: flex;
   flex-direction: column;
-  font-family:  'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   flex-wrap: nowrap;
   font-size: 40px;
   height: 720px;
@@ -148,16 +149,22 @@ section h3 {
 section h4 {
   font-size: 1.2em;
   letter-spacing: 2px;
+  font-weight: 500;
+  color: #495057;
 }
 section h5 {
   font-size: 1em;
   letter-spacing: 1px;
+  font-weight: 400;
+  color: #495057;
 }
 section h6 {
   font-size: 0.7em;
   letter-spacing: 0px;
   margin: 0px auto;
   text-align: left;
+  font-weight: 300;
+  color: #495057;
 }
 section header, section footer {
   position: absolute;
@@ -231,7 +238,8 @@ section blockquote {
   padding: 0 2em;
   position: relative;
   z-index: 0;
-  color: gray
+  color: #495057;
+  text-align: left;
 }
 section blockquote::before, section blockquote::after {
   content: url('./assets/uncover-quote.svg');

@@ -1032,15 +1032,11 @@ impl<T> Lock<T> {
 
 ---
 
-### Things to do with atomics
-
-- lock free data structure
-- in memory metrics
-- id generation
-
----
+#### This is basically how
 
 ## Mutex
+
+#### works
 
 ---
 
@@ -1054,13 +1050,83 @@ impl<T> Lock<T> {
 
 ---
 
+> In computer science, a _semaphore_ is a variable or abstract data type used to control access to a common resource by multiple processes and avoid critical section problems in a concurrent system such as a multitasking operating system. A trivial semaphore is a plain variable that is changed (for example, incremented or decremented, or toggled) depending on programmer-defined conditions.
+>
+> A useful way to think of a semaphore as used in a real-world system is as __a record of how many units of a particular resource are available__, coupled with operations to adjust that record safely (i.e., to avoid race conditions) as units are acquired or become free, and, if necessary, wait until a unit of the resource becomes available.
 
+---
+
+### Semaphore as a generalized Mutex
+
+![height:400px](images/concurrency-semaphore.jpg)
 
 ---
 
-
+### Demo code: A well-behaved HTTP client
 
 ---
+
+## Channel
+
+---
+
+### Channel basics
+
+![height:400px](images/concurrency-channel.jpg)
+
+---
+
+### Flavours of Channels
+
+- sync: sender can block, limited capacity
+  - `Mutex` + `Condvar` + `VecDeque`
+  - Atomic VecDeque (atomic queue) + `thread::park` + `thread::notify`
+- async: sender cannot block, unbounded
+  - `Mutex` + `Condvar` + `VecDeque`
+  - `Mutex` + `Condvar` + `DoubleLinkedList`
+- rendezvous: sync with capacity = 0. Used for thread sync.
+  - `Mutex` + `Condvar`
+- oneshot: only one call to `send()`. e.g. Ctrl+C to stop all threads
+  - atomic swap
+- async/await
+  - basically same as sync but waker is different
+
+---
+
+### Demo code: naive MPSC implementation
+
+---
+
+### Demo code: implement actor with channel
+
+- Questions:
+  - When creating an actor, what is its `pid`?
+  - When sending a message to an actor, how the actor reply (`handle_call`)?
+
+---
+
+## References
+
+- CAS: https://en.wikipedia.org/wiki/Compare-and-swap
+- Ordering: https://doc.rust-lang.org/std/sync/atomic/enum.Ordering.html
+- std::memory_order: https://en.cppreference.com/w/cpp/atomic/memory_order
+- Atomics and Memory Ordering: https://www.youtube.com/watch?v=rMGWeSjctlY
+- spinlock: https://en.wikipedia.org/wiki/Spinlock
+- spin-rs: https://github.com/mvdnes/spin-rs
+- parking lot：https://github.com/Amanieu/parking_lot
+- Flume: https://github.com/zesterer/flume
+- Crossbeam channel：https://docs.rs/crossbeam-channel
+
+---
+
+### Things to do with atomics
+
+- lock free data structure
+- in memory metrics
+- id generation
+
+---
+
 
 <!-- _backgroundColor: #264653 -->
 <!-- _color: #e1e1e1 -->
