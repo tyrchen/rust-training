@@ -3,6 +3,22 @@ marp: true
 theme: uncover
 ---
 
+<style>
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+</style>
+
 # Rust Trainings All in One
 
 <style scoped>
@@ -12,7 +28,7 @@ theme: uncover
 - [High-level intro about Rust](#2)
 - [Ownership, borrow check, and lifetime](#35)
 - [Typesystem and Generic Programming](#59)
-- Concurrency - primitives
+- [Concurrency - primitives](#83)
 - Concurrency - async/await
 - Networking and security
 - FFI with C/Elixir/Swift/Java
@@ -832,6 +848,217 @@ demo: [rust implmentation](https://github.com/tyrchen/rust-training/blob/master/
 ---
 
 ## Concurrency - primitives
+
+---
+
+## Let's solve a real-world problem
+
+---
+
+### v1: Simple loop
+
+![height:400px](images/concurrency-1.png)
+
+---
+
+### v2: Multithread with shared state
+
+![height:400px](images/concurrency-2.png)
+
+---
+
+### v3: Optimize the lock
+
+![height:400px](images/concurrency-3.png)
+
+---
+
+### v4: Share memory by conmmunicating
+
+![height:400px](images/concurrency-4.png)
+
+---
+
+### v5: Async Task
+
+![height:400px](images/concurrency-5.jpg)
+
+---
+
+## What have we used so far?
+
+- Mutex Lock
+- Channel
+- Async Task (coroutine, promise, etc.)
+
+---
+
+## How is Mutex implemented?
+
+---
+
+### An naive implementation
+
+```Rust
+struct Lock<T> {
+  locked: bool,
+  data: T,
+}
+
+impl<T> Lock<T> {
+  pub fn new(data: T) -> Lock<T> { ... }
+
+  pub fn lock<R>(&mut self, op: impl FnOnce(&mut T) -> R) -> R {
+    // spin if we can't get lock
+    while self.locked != false {} // **1
+    // ha, we can lock and do our job
+    self.locked = true; // **2
+    // execute the op as we got lock
+    let ret = op(self.data); // **3
+    // unlock
+    self.locked = false; // **4
+    ret
+  }
+}
+
+// You may call it like this:
+let l = Lock::new(0);
+l.lock(|v| v += 1);
+```
+
+---
+
+### Issues
+
+- Atomicity
+  - In multicore environment, race condition between 1 and 2 - other thread may kick in
+  - Even in single core environment, OS may do preempted multitasking, causing other thread kick in
+- OOO execution
+  - Compiler might generate optimized instructions that put 3 before 1
+  - CPU may do OOO execution to best utilize pipeline, so putting 3 before 1 might also happen
+
+---
+
+### How to solve this?
+
+- We need CPU instruction to guarantee Atomicity and non-OOO
+- Algorithm: _CAS (Compare-And-Swap)_
+- data structure: `AtomicXXX`
+
+---
+
+## Atomics
+
+---
+
+### Updated lock
+
+```Rust
+struct Lock<T> {
+  locked: AtomicBool, // ***
+  data: UnsafeCell<T>, // ***
+}
+unsafe impl<T> Sync for Lock<T> where T: Send {} // need to explicitly impl `Send`
+
+impl<T> Lock<T> {
+  pub fn new(data: T) -> Self { ... }
+  pub fn lock<R>(&mut self, op: impl FnOnce(&mut T) -> R) -> R {
+    // spin if we can't get lock
+    while self
+      .locked
+      .compare_exchange(false, true, Ordering::Acquire, Ordering::Relaxed)
+      .is_error() {}
+    // execute the op as we got lock
+    let ret = op(unsafe { &mut *self.v.get() }); // **3
+    // unlock
+    self.locked.store(false, Ordering::Release); // **4
+    ret
+  }
+}
+
+// You may call it like this:
+let l = Lock::new(0);
+l.lock(|v| v += 1);
+```
+
+---
+
+### What does ordering mean?
+
+- Relaxed: No restriction to compiler/CPU, OOO is allowed
+- Release:
+  - for current thread, any read/write inst cannot be OOO after this inst (`store`);
+  - for other thread, if they use `Acquire` to read, they would see the changed value
+- Acquire
+  - for current thread, any read/write inst cannot be OOO before this inst (`compare_exchange`)
+  - for other thread, if they use `Release` to update data, the modification would be see for current thread
+- AcqRel: combination of Acquire and Release
+- SeqCst: besides `AcqRel`, all threads would see same operation order.
+
+---
+
+### Optimization
+
+```Rust
+
+pub struct Lock<T> {
+    locked: AtomicBool,
+    data: UnsafeCell<T>,
+}
+unsafe impl<T> Sync for Lock<T> where T: Send {}
+
+impl<T> Lock<T> {
+  pub fn new(data: T) -> Self {...}
+  pub fn lock<R>(&self, op: impl FnOnce(&mut T) -> R) -> R {
+      while self
+          .locked
+          .compare_exchange(false, true, Ordering::Acquire, Ordering::Relaxed)
+          .is_err()
+      {
+          while self.locked.load(Ordering::Relaxed) == true {
+              std::thread::yield_now(); // we may yield thread now
+          }
+      }
+      let ret = op(unsafe { &mut *self.data.get() });
+      self.locked.store(false, Ordering::Release);
+      ret
+  }
+}
+```
+
+---
+
+![bg fit](images/concurrency-spinlock.png)
+
+---
+
+### Things to do with atomics
+
+- lock free data structure
+- in memory metrics
+- id generation
+
+---
+
+## Mutex
+
+---
+
+### Real world Mutex
+
+![height:400px](images/concurrency-mutex.png)
+
+---
+
+## Semaphore
+
+---
+
+
+
+---
+
+
 
 ---
 

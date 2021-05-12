@@ -5,5 +5,6 @@ members = [
   "code/lifetime",
   "code/strtok",
   "code/gp",
+  "code/primitives",
   "code/simple_asm",
 ]
