@@ -888,7 +888,7 @@ demo: [rust implmentation](https://github.com/tyrchen/rust-training/blob/master/
 ## What have we used so far?
 
 - Mutex Lock
-- Channel
+- Channel/Actor
 - Async Task (coroutine, promise, etc.)
 
 ---
