@@ -6,5 +6,6 @@ members = [
   "code/strtok",
   "code/gp",
   "code/primitives",
+  "code/tokio-server",
   "code/simple_asm",
 ]

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package abi;
+
+message Request {
+  string id = 1;
+  string data = 2;
+}
+
+message Response { string data = 1; }

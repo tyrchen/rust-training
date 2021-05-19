@@ -29,7 +29,7 @@ theme: uncover
 - [Ownership, borrow check, and lifetime](#35)
 - [Typesystem and Generic Programming](#59)
 - [Concurrency - primitives](#83)
-- Concurrency - async/await
+- [Concurrency - async/await](#113)
 - Networking and security
 - FFI with C/Elixir/Swift/Java
 - WASM/WASI
@@ -873,7 +873,7 @@ demo: [rust implmentation](https://github.com/tyrchen/rust-training/blob/master/
 
 ---
 
-### v4: Share memory by conmmunicating
+### v4: Share memory by communicating
 
 ![height:400px](images/concurrency-4.png)
 
@@ -1133,11 +1133,172 @@ impl<T> Lock<T> {
 
 ---
 
-
-<!-- _backgroundColor: #264653 -->
-<!-- _color: #e1e1e1 -->
-
 ## Concurrency - async/await
+
+---
+
+### Using threads in Rust
+
+```rust
+use std::thread;
+
+fn main() {
+    println!("So we start the program here!");
+    let t1 = thread::spawn(move || {
+        thread::sleep(std::time::Duration::from_millis(200));
+        println!("We create tasks which gets run when they're finished!");
+    });
+
+    let t2 = thread::spawn(move || {
+        thread::sleep(std::time::Duration::from_millis(100));
+        println!("We can even chain callbacks...");
+        let t3 = thread::spawn(move || {
+            thread::sleep(std::time::Duration::from_millis(50));
+            println!("...like this!");
+        });
+        t3.join().unwrap();
+    });
+    println!("While our tasks are executing we can do other stuff here.");
+
+    t1.join().unwrap();
+    t2.join().unwrap();
+}
+
+```
+
+---
+
+### Drawbacks of threads
+
+- large stack (not suitable for heavy loaded concurrent jobs - e.g. a web server)
+- context switch is out of your control
+- lots of syscall involved (costly when # of threads is high)
+
+---
+
+### What are alternative solutions?
+
+---
+
+## Green threads/processes
+
+### (stackful coroutine)
+
+#### Golang/Erlang
+
+---
+
+### Green Threads
+
+- Run some non-blocking code.
+- Make a blocking call to some external resource.
+- CPU "jumps" to the "main" thread which schedules a different thread to run and "jumps" to that stack.
+- Run some non-blocking code on the new thread until a new blocking call or the task is finished.
+- CPU "jumps" back to the "main" thread, schedules a new thread which is ready to make progress, and "jumps" to that thread.
+
+---
+
+### Green Threads - pros/cons
+
+- Pros:
+  - Simple to use. The code will look like it does when using OS threads.
+  - A "context switch" is reasonably fast.
+  - Each stack only gets a little memory to start with so you can have hundreds of thousands of green threads running.
+  - It's easy to incorporate preemption which puts a lot of control in the hands of the runtime implementors.
+- Cons:
+  - The stacks might need to grow. Solving this is not easy and will have a cost.
+  - You need to save the CPU state on every switch.
+  - It's not a zero cost abstraction (Rust had green threads early on and this was one of the reasons they were removed).
+  - Complicated to implement correctly if you want to support many different platforms.
+
+---
+
+## Poll based event loops
+
+### (stackless coroutine)
+
+#### Javascript/Rust
+
+---
+
+### Callback
+
+![bg left fit](images/js_runtime.png)
+
+```js
+setTimer(200, () => {
+  setTimer(100, () => {
+    setTimer(50, () => {
+      console.log("I'm the last one");
+    });
+  });
+});
+```
+
+---
+
+![bg left fit](images/promise.jpg)
+
+### Promise
+
+```js
+function timer(ms) {
+    return new Promise(
+      (resolve) => setTimeout(resolve, ms)
+    );
+}
+
+timer(200)
+.then(() => timer(100))
+.then(() => timer(50))
+.then(() => console.log("I'm the last one"));
+```
+
+### Async/Await
+
+```js
+async function run() {
+    await timer(200);
+    await timer(100);
+    await timer(50);
+    console.log("I'm the last one");
+}
+  ```
+
+---
+
+### The Rust approach
+
+---
+
+![bg fit](images/rust_future.jpg)
+
+---
+
+### Demo: writing a server in rust
+
+##### It uses [async-prost](#77), tokio and prost
+
+---
+
+### One more thing...
+
+![height:500px](images/concurrency-6.png)
+
+---
+
+### An event store example
+
+![height:500px](images/async-example.png)
+
+---
+
+## References
+
+- [Future explained](https://cfsamson.github.io/books-futures-explained)
+- [Rust async book](https://rust-lang.github.io/async-book)
+- [calloop: a callback based event loop](https://github.com/Smithay/calloop)
+
 
 ---
 

@@ -1,0 +1,19 @@
+{
+    "includes": [
+        "src"
+    ],
+    "files": [
+        "src/message.proto"
+    ],
+    "output": "src/pb",
+    "opts": [
+        {
+            "scope": "type",
+            "attr": "#[derive(serde::Serialize, serde::Deserialize)]\n#[serde(default)]",
+            "paths": [
+                "abi.Request",
+                "abi.Response"
+            ]
+        }
+    ]
+}
