@@ -1304,12 +1304,25 @@ async function run() {
 
 ## Networking and security
 
-
 ---
 
 ### Network Stack
 
 ![height:500px](images/network-stack.png)
+
+
+---
+
+### App for centralized network
+
+![height:500px](images/centralized-network.png)
+
+---
+
+
+### App for p2p network
+
+![height:500px](images/p2p-network.jpg)
 
 ---
 
@@ -1321,31 +1334,19 @@ async function run() {
 
 ### Demo: Build a TCP server (sync/async)
 
-- deps: stdlib / tokio
-- (figure tbd)
+deps: stdlib / tokio
+
 ---
 
 ### Demo: HTTP Client/Server
 
-- deps: reqwest / warp
-- (figure tbd)
+deps: reqwest / actix-web
 
 ---
 
 ### Demo: gRPC
 
-- deps: prost / tonic
-- build script
-- (figure tbd)
-
----
-
-### Something more about gRPC
-
-- Length-Prefixed-Message → Compressed-Flag Message-Length Message
-- Compressed-Flag → 0 / 1 # encoded as 1 byte unsigned integer
-- Message-Length → {length of Message} # encoded as 4 byte unsigned integer (big endian)
-- Message → *{binary octet}
+deps: prost / tonic
 
 ---
 
@@ -1362,9 +1363,26 @@ async function run() {
 
 ---
 
+### TLS (skip)
+
+---
+
+### Noise Protocol
+
+![height:500px](images/noise-process.jpg)
+
+---
+
+### Demo for noise protocol
+
+---
+
+
 ### References
 
-- [https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-HTTP2.md](GRPC Protocol)
+- [GRPC Protocol](https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-HTTP2.md)
+- [Are we web yet?](https://www.arewewebyet.org/)
+- [Tonic: rust grpc framework](https://github.com/hyperium/tonic)
 
 ---
 
