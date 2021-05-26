@@ -30,7 +30,7 @@ theme: uncover
 - [Typesystem and Generic Programming](#59)
 - [Concurrency - primitives](#83)
 - [Concurrency - async/await](#113)
-- Networking and security
+- [Networking and security](#129)
 - FFI with C/Elixir/Swift/Java
 - WASM/WASI
 - Rust for real-world problems
@@ -1302,12 +1302,72 @@ async function run() {
 
 ---
 
-<!-- _backgroundColor: #264653 -->
-<!-- _color: #e1e1e1 -->
-
 ## Networking and security
 
+
 ---
+
+### Network Stack
+
+![height:500px](images/network-stack.png)
+
+---
+
+### Rust Network Stacks
+
+![height:500px](images/rust-network-stack.png)
+
+---
+
+### Demo: Build a TCP server (sync/async)
+
+- deps: stdlib / tokio
+- (figure tbd)
+---
+
+### Demo: HTTP Client/Server
+
+- deps: reqwest / warp
+- (figure tbd)
+
+---
+
+### Demo: gRPC
+
+- deps: prost / tonic
+- build script
+- (figure tbd)
+
+---
+
+### Something more about gRPC
+
+- Length-Prefixed-Message → Compressed-Flag Message-Length Message
+- Compressed-Flag → 0 / 1 # encoded as 1 byte unsigned integer
+- Message-Length → {length of Message} # encoded as 4 byte unsigned integer (big endian)
+- Message → *{binary octet}
+
+---
+
+### Steps to write a server
+
+- data serialization: serde / protobuf / flatbuffer / capnp / etc.
+- transport protocol: tcp / http / websocket / quic / etc.
+- security layer: TLS / noise protocol / secio / etc.
+- application layer: your own application logic
+
+---
+
+### Network Security
+
+---
+
+### References
+
+- [https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-HTTP2.md](GRPC Protocol)
+
+---
+
 
 <!-- _backgroundColor: #264653 -->
 <!-- _color: #e1e1e1 -->
