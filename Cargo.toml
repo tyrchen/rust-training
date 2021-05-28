@@ -9,4 +9,7 @@ members = [
   "code/network",
   "code/tokio-server",
   "code/simple_asm",
+
+  # live coding
+  "live_coding/hello_world",
 ]

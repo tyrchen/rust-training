@@ -977,6 +977,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "hello_world"
+version = "0.1.0"
+
+[[package]]
 name = "hermit-abi"
 version = "0.1.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"

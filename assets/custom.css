@@ -1,9 +1,8 @@
-@import url('https://fonts.googleapis.com/css?family=BioRhyme&display=swap');
+@import url("https://fonts.googleapis.com/css?family=BioRhyme&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;300;400;700&display=swap");
 /* @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Cairo&display=swap'); */
-
-
 
 /*!
  * Marp / Marpit Uncover theme
@@ -18,7 +17,8 @@
 section {
   display: flex;
   flex-direction: column;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif, "Noto Sans SC";
   flex-wrap: nowrap;
   font-size: 40px;
   height: 720px;
@@ -50,12 +50,19 @@ section::after {
    * Gradient with hard stops has incorrect rendering in Firefox's PDF.js
    * @see https://github.com/mozilla/pdf.js/issues/10572
    */
-  background: url("data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 1 1" width="1" height="1"><path d="M0 1h1v-1Z" fill="rgba(32, 34, 40, 0.05)"/></svg>") no-repeat center center;
+  background: url("data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewbox="0011" width="1" height="1"><path d="M01h1v-1z" fill="rgba(
+        32,
+        34,
+        40,
+        0.05
+      )"/></svg>")
+    no-repeat center center;
   background-size: cover;
   color: #202228;
   text-shadow: 0 0 5px #fdfcff;
 }
-section pre, section code {
+section pre,
+section code {
   background: #f2f1f4;
   color: #202228;
 }
@@ -65,37 +72,50 @@ section a {
 section a:hover {
   color: #087eaa;
 }
-section h1 strong, section h2 strong, section h3 strong, section h4 strong, section h5 strong, section h6 strong {
+section h1 strong,
+section h2 strong,
+section h3 strong,
+section h4 strong,
+section h5 strong,
+section h6 strong {
   color: #33b1dd;
 }
-section header, section footer {
+section header,
+section footer {
   color: rgba(32, 34, 40, 0.4);
   text-shadow: 0 1px 0 rgba(253, 252, 255, 0.8);
-	text-align: left;
+  text-align: left;
 }
 section mark {
   color: #009dd5;
   background: transparent;
 }
 section:not(.invert) {
-  @import url('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/color-brewer.min.css');
+  @import url("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/color-brewer.min.css");
 }
 section.invert {
   background: #202228;
   color: #fff;
-  @import url('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/codepen-embed.min.css');
+  @import url("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/codepen-embed.min.css");
 }
 section.invert::after {
   /*
    * Gradient with hard stops has incorrect rendering in Firefox's PDF.js
    * @see https://github.com/mozilla/pdf.js/issues/10572
    */
-  background: url("data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 1 1" width="1" height="1"><path d="M0 1h1v-1Z" fill="rgba(255, 255, 255, 0.05)"/></svg>") no-repeat center center;
+  background: url("data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewbox="0011" width="1" height="1"><path d="M01h1v-1z" fill="rgba(
+        255,
+        255,
+        255,
+        0.05
+      )"/></svg>")
+    no-repeat center center;
   background-size: cover;
   color: #fff;
   text-shadow: 0 0 5px #202228;
 }
-section.invert pre, section.invert code {
+section.invert pre,
+section.invert code {
   background: #2b2d33;
   color: #fff;
 }
@@ -105,10 +125,16 @@ section.invert a {
 section.invert a:hover {
   color: #88dcf4;
 }
-section.invert h1 strong, section.invert h2 strong, section.invert h3 strong, section.invert h4 strong, section.invert h5 strong, section.invert h6 strong {
+section.invert h1 strong,
+section.invert h2 strong,
+section.invert h3 strong,
+section.invert h4 strong,
+section.invert h5 strong,
+section.invert h6 strong {
   color: #80d9f3;
 }
-section.invert header, section.invert footer {
+section.invert header,
+section.invert footer {
   color: rgba(255, 255, 255, 0.4);
   text-shadow: 0 1px 0 rgba(32, 34, 40, 0.8);
 }
@@ -116,24 +142,37 @@ section.invert mark {
   color: #60d0f0;
   background: transparent;
 }
-section > *:first-child, section[data-header] > :nth-child(2) {
+section > *:first-child,
+section[data-header] > :nth-child(2) {
   margin-top: 0;
 }
-section > *:last-child, section[data-footer] > :nth-last-child(2) {
+section > *:last-child,
+section[data-footer] > :nth-last-child(2) {
   margin-bottom: 0;
 }
-section svg[data-marp-fitting='svg'] {
+section svg[data-marp-fitting="svg"] {
   max-height: 660px;
   --preserve-aspect-ratio: xMidYMid meet;
 }
-section p, section blockquote {
+section p,
+section blockquote {
   margin: 0 0 15px 0;
 }
-section h1, section h2, section h3, section h4, section h5, section h6 {
+section h1,
+section h2,
+section h3,
+section h4,
+section h5,
+section h6 {
   margin: 15px 0 30px 0;
-  font-family: 'BioRhyme';
+  font-family: "BioRhyme", "Noto Sans SC";
 }
-section h1 strong, section h2 strong, section h3 strong, section h4 strong, section h5 strong, section h6 strong {
+section h1 strong,
+section h2 strong,
+section h3 strong,
+section h4 strong,
+section h5 strong,
+section h6 strong {
   font-weight: inherit;
 }
 section h1 {
@@ -166,7 +205,8 @@ section h6 {
   font-weight: 300;
   color: #495057;
 }
-section header, section footer {
+section header,
+section footer {
   position: absolute;
   z-index: 1;
   left: 70px;
@@ -186,20 +226,23 @@ section a {
 section a:hover {
   text-decoration: underline;
 }
-section ul, section ol {
+section ul,
+section ol {
   margin: 0 auto;
   text-align: left;
   font-size: 20px;
 }
-section > ul, section > ol {
+section > ul,
+section > ol {
   margin-bottom: 15px;
   margin-top: 15px;
   font-size: 28px;
 }
 
-
-section pre, section code {
-  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+section pre,
+section code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier,
+    monospace;
   letter-spacing: 0;
   margin: -0.1em 0.1em 0.1em;
   padding: 0.1em;
@@ -210,8 +253,8 @@ section pre {
   line-height: 1.15;
   margin: 11px auto 6px auto;
   min-width: 95%;
-	max-width: 95%;
-	overflow: scroll;
+  max-width: 95%;
+  overflow: scroll;
   padding: 0.4em 0.6em;
   text-align: left;
 }
@@ -223,13 +266,18 @@ section table {
   border-collapse: collapse;
   margin: 0 auto 15px auto;
 }
-section table > thead > tr > td, section table > tbody > tr > td, section table > thead > tr > th, section table > tbody > tr > th {
+section table > thead > tr > td,
+section table > tbody > tr > td,
+section table > thead > tr > th,
+section table > tbody > tr > th {
   padding: 0.15em 0.5em;
 }
-section table > thead > tr > td, section table > thead > tr > th {
+section table > thead > tr > td,
+section table > thead > tr > th {
   border-bottom: 3px solid currentColor;
 }
-section table > tbody > tr:not(:last-child) > td, section table > tbody > tr:not(:last-child) > th {
+section table > tbody > tr:not(:last-child) > td,
+section table > tbody > tr:not(:last-child) > th {
   border-bottom: 1px solid currentColor;
 }
 section blockquote {
@@ -241,8 +289,9 @@ section blockquote {
   color: #495057;
   text-align: left;
 }
-section blockquote::before, section blockquote::after {
-  content: url('./assets/uncover-quote.svg');
+section blockquote::before,
+section blockquote::after {
+  content: url("./assets/uncover-quote.svg");
   height: auto;
   pointer-events: none;
   position: absolute;
@@ -265,7 +314,7 @@ strong {
   color: #33b1dd;
 }
 
-em  {
+em {
   color: #6e2142;
   font-weight: bold;
   font-style: normal;
