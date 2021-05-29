@@ -393,7 +393,7 @@ h6 {font-size: 18px; margin-top: 40px;}
 
 ---
 
-## How's Productivity of Rust?
+### Rust 开发的效率如何?
 
 ---
 
@@ -404,71 +404,53 @@ h6 {font-size: 18px; margin-top: 40px;}
 
 ---
 
-## Things built with Rust
+### Rust 可以用来做什么？
 
 ![height:400px](images/built_with_rust.jpg)
 
 ---
 
-## Should I use Rust?
-
-- Rust is ideal when you need a system that reliable and performant
-- Sometimes you don't, sometimes you do, sometimes you need that later
-- it's all about tradeoffs
-
----
-
-## Rust for our use cases
-
-- parts of the system that are bottlenecks
-  - bottleneck on computation
-  - bottleneck on memory consumption
-  - bootleneck on I/O
-- parser/decoder/encoder
-- wants to leverage existingC/C++/Rust ecosystem (e.g. you need blake3 for hashing)
-
----
-
-## Rust FFI
+### Rust 和其它语言的互操作
 
 ![height:400px](images/rust_ffi.jpg)
 
 ---
 
-## Learning rust as a(n)...
+### 我是个 xyz 程序员，学 Rust 该注意什么？
 
-- Elixir eng: ownership model, type system, oh no mutation
-- Scala eng: ownership model, oh no mutation
-- Typescript eng: ownership model, multi-threaded programming
-- Swift/Java eng: ownership model
-- Python eng: ownership model, type system
-
----
-
-## The common misunderstandings
+- Erlang/Elixir: 所有权，类型系统，可变性
+- Java/Swift/Scala: 所有权
+- Typescript: 所有权，多线程编程
+- Python: 所有权，类型系统，并发处理
 
 ---
 
-### 1. Rust is super hard to learn...
+### 学习 Rust 的误区...
+
+---
+
+### 1. Rust 非常难学？
 
 ![height:500px](images/rust_learning_curve.png)
 
 ---
 
-### Rust is explicit
+### 非也，Rust 就是想跟你处得明明白白
 
-- Lots of knowledge about computer science is suddenly explicit to you
-- If all your pain to learn a lang is 100%:
-  - Rust:
-    - Compiler help to reduce that to 90%
-    - Then you suffer 70% the pains in first 3-6 months
-    - Then the rest 20% in 3-5 years
-  - Other:
-    - You suffer 10-30% in first 3-6 months
-    - Then 70%-90% in next 3-5 years
+- 范式转移（Paradigm Shift）
+- 大量计算机体系结构操作系统相关的知识一下子扑鼻而来
+- 如果学习一门语言的痛苦是 100%：
+  - Rust：
+    - 编译器帮你降低了 10% 的痛苦
+    - 然而你需要在头 3-6 个月承受剩下 70% 的痛苦
+    - 在接下来 3-5 年承受最后 20% 的痛苦
+  - 其它语言：
+    - 头 3-6 个月，你只需要承受 10-30% 的痛苦
+    - 之后的 3-5 年你可以慢慢承受 70-90% 的痛苦
+
 ---
 
-### 2. Unsafe Rust is evil...
+### 2. Unsafe Rust 听上去好可怕！
 
 ![height:500px](images/unsafe_rust.jpg)
 
@@ -478,7 +460,7 @@ h6 {font-size: 18px; margin-top: 40px;}
     ul { columns: 2; width: 90%; color: #ddd; }
 </style>
 
-## References
+## 参考资料
 
 - [The pain of real linear types in Rust](https://gankra.github.io/blah/linear-rust/)
 - [Substructural type system](https://en.wikipedia.org/wiki/Substructural_type_system)
@@ -499,21 +481,21 @@ h6 {font-size: 18px; margin-top: 40px;}
 <!-- _backgroundColor: #264653 -->
 <!-- _color: #e1e1e1 -->
 
-## Ownership, borrow check, and lifetime
+## 所有权，借用检查，以及生命周期
 
 ---
 
-### Ownership/Borrow Rules Review
+### 再探所有权和借用检查
 
 ![height:500px](images/ownership.jpg)
 
 ---
 
-## Lifetime, not a new idea
+## 生命周期（Lifetime）并非新概念
 
 ---
 
-#### Lifetime: Stack memory
+#### 栈内存的生命周期管理
 
 ```c
 #include <stdio.h>
@@ -540,23 +522,31 @@ int main() {
 
 ---
 
-#### Lifetime: Heap memory (tracing GC)
+### 堆内存的生命周期管理
 
-![bg  right:60% fit](images/tracing_gc.jpg)
+###### 手工管理，GC，ARC，...
 
 ---
 
-#### Lifetime: Heap memory (ARC)
+#### Tracing GC
+
+![bg right:60% fit](images/tracing_gc.jpg)
+
+---
+
+#### ARC
 
 ![bg right:65% fit](images/arc.png)
 
 ---
 
-## How Rust handles lifetime?
+## Rust 如何打破常规？
+
+###### Rust 并非独创，它继承了 C++ 和 Cyclone 的很多研究
 
 ---
 
-### Move semantics
+### Move 语义：保证有且只有一个 owner
 
 ---
 
@@ -565,9 +555,9 @@ int main() {
 
 ---
 
-### What a bout Borrow?
+### Borrow 语义：共享下的线程安全
 
-Think about: why does this work in Rust, but not C/C++?
+###### 思考题：为什么同样使用了引用，在 Rust 可以保证线程安全，而 C++ 不行？
 
 ---
 
@@ -575,24 +565,24 @@ Think about: why does this work in Rust, but not C/C++?
 
 ---
 
-#### Rust lifetime checker prevents this...
+#### Rust 生命周期检查器如何避免有问题的引用？
 
 ![height:500px](images/borrow_cross_threads.jpg)
 
 ---
 
-### Benefit of lifetime-constrained borrow
+### 带生命周期限制的借用
 
-- can borrow anything (stack object, heap object)
-- safety can be guaranteed at compile-time (no runtime lifetime bookkeeping)
-- Rust borrow checker is mostly a lifetime checker
+- 可以借用任何值（栈内存，堆内存）
+- 编译期检查（不需要耗费运行期的 CPU）
+- Rust 借用检查器基本上是个生命周期检查器
 
 ---
 
-### Lifetime Annotation
+### 我们如何告诉编译器生命周期？
 
-- similar as generics, but in lowercase starting with `'`
-- only need to put annotation when there's conflicts
+- 类似泛型，但有其专用符号 `'`
+- 只有生命周期无法被推断出来，才需要声明
 
 ```rust
 // need explicit lifetime
@@ -617,24 +607,29 @@ fn verify(x: &Role) { /*...*/ }
 
 ---
 
-### Static Lifetime
-
-- 'static
-- data included in bss / data / text section
-  - constants / static variables
-  - string literals
-  - functions
-- if used as trait bound:
-  - the type does not contain any non-static references
-  - owned data always passes a `'static` lifetime bound, but reference to the owned data does not
+### Live coding: strtok
 
 ---
 
-## Thread spawn
+![bg fit](images/strtok.jpg)
 
-<style scoped>
-    p { font-size: 24px; }
-</style>
+---
+
+### Static Lifetime
+
+- `'static`
+- 在 bss / data / text section 中的数据
+  - constants / static variables
+  - string literals
+  - functions
+- 如果在类型的 trait bound 中使用:
+  - 类型不包含任何非静态的引用（non-static references）
+- 有所有权的数据的 lifetime bound 是 `'static`，引用数据不是
+
+---
+
+### 我们再回头看：Thread spawn
+
 
 ```rust
 pub fn spawn<F, T>(f: F) -> JoinHandle<T>
@@ -647,14 +642,14 @@ where
 }
 ```
 
-The 'static constraint is a way of saying, roughly, that no borrowed data is permitted in the closure.
+###### 这里 `'static` lifetime bound 是说：`F` 不能使用任何借用的数据
 
 ---
 
 ### RAII (Resource Acquisition Is Initialization)
 
-- initializing the object will also make sure resource is initialized
-- releasing the object will also make sure resource is released
+- 对象的初始化会保证资源的初始化
+- 对象的释放会保证资源的释放
 
 ---
 
@@ -668,27 +663,26 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 
 ---
 
-## demo
+### RAII live coding: 博物馆门票
+
+###### 疫情期间，博物馆内限流最大容量 50 人，满了之后，出来一个才能进一个，怎么设计？
 
 ---
 
-![bg fit](images/strtok.jpg)
+### 总结：Cost of defects
+
+- 代码中不引入任何缺陷（只要是人，就无法避免错误）
+- 在敲入代码的时候就能被清晰地告知代码中的缺陷（发现问题时间：毫秒级）
+- 在编译或者单元测试时发现（秒级/分钟级）
+- 代码被 push 到 PR 中，CI 发现错误（分钟级/天级）
+- 别人 review 你的代码时发现问题（小时级/天级）
+- 代码 merge 到 master，更严格的 CI（比如 end-to-end test）发现错误（小时级/天级）
+- 代码被部署后回归测试发现问题（天/周/月）
+- 代码被部署后很久用户发现问题（周/月/年）
 
 ---
 
-## Mental model
-
-- write the code and defer the complexity about ensuring the code is safe/correct
-- comfront the most of the safety/correctness problems upfront
-- Mutate can only happen when you own the data, or you have a mutable reference
-  - either way, the thread is guaranteed to be the only one with access at a time
-- Fearless Refactoring
-- reinforce properties well-behaved software exhibits
-- sometimes too strict: rust isn't dogmatic about enforcing it
-
----
-
-## References
+### 参考资料
 
 - [Mark-And-Sweep (Garbage Collection Algorithm)](https://www.linkedin.com/pulse/mark-and-sweep-garbage-collection-algorithm-saral-saxena/)
 - [Tracing garbage collection](https://en.wikipedia.org/wiki/Tracing_garbage_collection)
@@ -701,31 +695,10 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 
 ---
 
-## Cost of defects
-
-- Don't introduce defect (this is impossible because humans are fallible).
-- Detect and correct defect as soon as the bad key press occurs (within reason: you don't want the programmer to lose too much flow) (milliseconds later).
-- At next build / test time (seconds or minutes later).
-- When code is shared with others (maybe you push a branch and CI tells you something is wrong) (minutes to days later).
-- During code review (minutes to days later).
-- When code is integrated (e.g. merged) (minutes to days later).
-- When code is deployed (minutes to days or even months later).
-- When a bug is reported long after the code has been deployed (weeks to years later).
-
----
-
-## Ownership and Borrow rules
-
-- Use after free: no more (reference can't point to dropped value)
-- Buffer underruns, overflows, illegal memory access: no more (reference must be valid and point to owned value)
-- memory level data races: no more (single writer or multiple readers)
-
----
-
 <!-- _backgroundColor: #264653 -->
 <!-- _color: #e1e1e1 -->
 
-## Typesystem and Generic Programming
+## 类型系统和泛型编程
 
 ---
 
@@ -733,7 +706,7 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 
 ---
 
-### How types are layed out in memory?
+### 数据结构在内存中是如何排布的？
 
 ---
 
@@ -741,7 +714,7 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 
 ---
 
-## Trait (Typeclass)
+### Trait (Typeclass)
 
 ---
 
@@ -749,14 +722,18 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 
 ---
 
+### Live coding：Fibonacci 遍历器
+
+---
+
 ### Trait Object
 
-- Unlike java, you can't assign a value to a trait (no implicit reference!!!)
-- trait object is a fat pointer (automatically converted)
-  - normal pointer reference to the value
-  - vtable (vtable pointer)
-    - unlike C++/Java, it is not a ptr in struct
-- dynamic dispatch
+- 你无法直接把值赋给 trait
+  - 不像 java，Rust 没有隐式引用
+- trait object 是胖指针（自动生成）
+  - ptr：指向数据的指针
+  - vptr：指向 vtable 的指针
+- 动态分发
 
 
 ![bg fit left](images/trait_object.jpg)
@@ -794,25 +771,10 @@ The 'static constraint is a way of saying, roughly, that no borrowed data is per
 
 ---
 
-### Classification of Abstractions
+### _Generics_ 之于 __Types__
 
-- _Data Abstractions_: data types and sets of operations defined on them
-  - e.g. `Vec<T>`, `HashMap<K, V>`
-- _Algorithmic abstrations_: families of data abstractions that have a set of efficient algorithms in common (generic algorithms)
-  - e.g. `quicksort`, `binary_search`
-- _Structural abstractions_: a data abstraction A belongs to a structural abstraction S if and only if S is an intersection of some of the algorithmic abstractions to which A belongs.
-  - e.g. singly-linked-lists
-- _Representational abstractions_: mappings from one structural abstration to another, creating a new type and implementing a set of operations on that type.
-  - e.g. `VecDeque<T>`
-- Comes from: Generic Programming: http://stepanovpapers.com/genprog.pdf
-
----
-
-### _Generics_ to __Types__
-
-just like
-###  _Types_ to __Values__
-
+就像
+###  _Types_ 之于 __Values__
 
 ---
 
@@ -838,6 +800,10 @@ demo: [rust implmentation](https://github.com/tyrchen/rust-training/blob/master/
 
 ---
 
+### Live coding: Event encoder
+
+---
+
 ## Realworld GP example
 
 ---
@@ -852,83 +818,59 @@ demo: [rust implmentation](https://github.com/tyrchen/rust-training/blob/master/
 > — Epigrams on programming
 ---
 
-## References
+## 参考文档
 
 
 - [All about trait objects](https://brson.github.io/rust-anthology/1/all-about-trait-objects.html)
 - [Protocol-oriented programming in swift](https://www.youtube.com/watch?v=xE5EcHuz52I&ab_channel=ThuyLuongThi)
 - [Generic Data Types](https://doc.rust-lang.org/book/ch10-01-syntax.html)
 - [Generics (Rust by Example)](https://doc.rust-lang.org/beta/rust-by-example/generics.html)
+- [async prost](https://github.com/tyrchen/async-prost)
 
 ---
 
-## Why not object oriented?
+<!-- _backgroundColor: #264653 -->
+<!-- _color: #e1e1e1 -->
+
+## 并发 - 并发原语
 
 ---
 
-### Class is awesome
-
-![bg left fit](images/classes.png)
-
-- Encapsulation
-- Access control
-- Abstraction
-- Namespace
-- Extensibility
+### 我们来一起构思一个 KV server
 
 ---
 
-### Class has problems
-
-- inheritance is pretty limited - choose superclass well!
-- know what/how to override (and when not to)
-- superclass may have properties
-  - you have to accept it
-  - initialization burden
-  - don't break assumptions of superclass
-- hard to reuse outside the hierachy (composition over inheritance)
-
----
-
-## Concurrency - primitives
-
----
-
-## Let's solve a real-world problem
-
----
-
-### v1: Simple loop
+### v1: 单线程死循环
 
 ![height:400px](images/concurrency-1.png)
 
 ---
 
-### v2: Multithread with shared state
+### v2: 多线程，共享数据
 
 ![height:400px](images/concurrency-2.png)
 
 ---
 
-### v3: Optimize the lock
+### v3: 优化锁的粒度
 
 ![height:400px](images/concurrency-3.png)
 
 ---
 
-### v4: Share memory by communicating
+### v4: 使用 Channel
 
 ![height:400px](images/concurrency-4.png)
 
 ---
 
-### v5: Async Task
+### v5: 异步处理
 
 ![height:400px](images/concurrency-5.jpg)
 
 ---
 
-## What have we used so far?
+### 我们目前使用了什么并发原语？
 
 - Mutex Lock
 - Channel/Actor
@@ -936,11 +878,11 @@ demo: [rust implmentation](https://github.com/tyrchen/rust-training/blob/master/
 
 ---
 
-## How is Mutex implemented?
+### Mutex 是如何构建的？
 
 ---
 
-### An naive implementation
+### 一个比较糙的实现
 
 ```Rust
 struct Lock<T> {
@@ -971,22 +913,22 @@ l.lock(|v| v += 1);
 
 ---
 
-### Issues
+### 问题
 
-- Atomicity
-  - In multicore environment, race condition between 1 and 2 - other thread may kick in
-  - Even in single core environment, OS may do preempted multitasking, causing other thread kick in
-- OOO execution
-  - Compiler might generate optimized instructions that put 3 before 1
-  - CPU may do OOO execution to best utilize pipeline, so putting 3 before 1 might also happen
+- 原子性
+  - 在多核环境下，1/2 之间会产生竞争（race condition）- 其它线程也许会进入
+  - 在单核环境下，OS 抢占多任务依旧可能会在 1/2 见产生竞争
+- 乱序
+  - 编译器也许会优化指令，把 3 放在 1 之前
+  - CPU 也许会乱序执行（OOO execution），把 3 放在 1 之前
 
 ---
 
-### How to solve this?
+### 如何解决这个问题？
 
-- We need CPU instruction to guarantee Atomicity and non-OOO
-- Algorithm: _CAS (Compare-And-Swap)_
-- data structure: `AtomicXXX`
+- 需要硬件（CPU）来保证原子性和避免 OOO
+- 算法：_CAS (Compare-And-Swap)_
+- 数据结构（Rust）：`AtomicXXX`
 
 ---
 
@@ -994,7 +936,7 @@ l.lock(|v| v += 1);
 
 ---
 
-### Updated lock
+### 更新之后的 lock
 
 ```Rust
 struct Lock<T> {
@@ -1026,21 +968,21 @@ l.lock(|v| v += 1);
 
 ---
 
-### What does ordering mean?
+### `Ordering` 是什么概念？
 
-- Relaxed: No restriction to compiler/CPU, OOO is allowed
+- Relaxed: 没有限制，随意 OOO
 - Release:
-  - for current thread, any read/write inst cannot be OOO after this inst (`store`);
-  - for other thread, if they use `Acquire` to read, they would see the changed value
-- Acquire
-  - for current thread, any read/write inst cannot be OOO before this inst (`compare_exchange`)
-  - for other thread, if they use `Release` to update data, the modification would be see for current thread
-- AcqRel: combination of Acquire and Release
-- SeqCst: besides `AcqRel`, all threads would see same operation order.
+  - 对当前线程，任何 read/write 不能被乱序到这条指令之后（比如：`store`）
+  - 对于其它线程，如果用 `Acquire` read，会看到变化后的结果
+- Acquire:
+  - 对当前线程，任何 read/write 不能被乱序到这条指令之后（比如：`compare_exchange`）
+  - 对于其它线程，如果用 `Release` 来更新数据，更新的数据会被当前线程看到
+- AcqRel: Acquire 和 Release 的结合
+- SeqCst: `AcqRel` 之外，所有线程都看到相同的操作顺序
 
 ---
 
-### Optimization
+### 继续优化我们的锁
 
 ```Rust
 
@@ -1075,11 +1017,7 @@ impl<T> Lock<T> {
 
 ---
 
-#### This is basically how
-
-## Mutex
-
-#### works
+### 这是 __Mutex__ 如何运作的基础
 
 ---
 
@@ -1099,7 +1037,7 @@ impl<T> Lock<T> {
 
 ---
 
-### Semaphore as a generalized Mutex
+### Semaphore: 更一般化的 Mutex
 
 ![height:400px](images/concurrency-semaphore.jpg)
 
@@ -1115,26 +1053,26 @@ impl<T> Lock<T> {
 
 ---
 
-### Channel basics
+### Channel 基础
 
 ![height:400px](images/concurrency-channel.jpg)
 
 ---
 
-### Flavours of Channels
+### 各种 Channel 的实现
 
-- sync: sender can block, limited capacity
+- sync: 容量有限，发送者会被 block
   - `Mutex` + `Condvar` + `VecDeque`
   - Atomic VecDeque (atomic queue) + `thread::park` + `thread::notify`
-- async: sender cannot block, unbounded
+- async: 容量无限，发送者不会被 block
   - `Mutex` + `Condvar` + `VecDeque`
   - `Mutex` + `Condvar` + `DoubleLinkedList`
-- rendezvous: sync with capacity = 0. Used for thread sync.
+- rendezvous: 容量为 0，用于线程间同步
   - `Mutex` + `Condvar`
-- oneshot: only one call to `send()`. e.g. Ctrl+C to stop all threads
+- oneshot: 只允许发送一次数据 e.g. Ctrl+C to stop all threads
   - atomic swap
 - async/await
-  - basically same as sync but waker is different
+  - 和 sync channel 类似，但 `Waker` 不同
 
 ---
 
@@ -1144,17 +1082,15 @@ impl<T> Lock<T> {
 
 ---
 
-### Demo code: naive actor
+### Live coding: naive actor
 
-- Questions:
-  - Which type of channel shall we use? SPSC, SPMC, MPSC?
-  - When creating an actor, what is its `pid`?
-  - When sending a message to an actor, how the actor reply (`handle_call`)?
-- Code: [code/primitives/src/actor.rs](https://github.com/tyrchen/rust-training/blob/master/code/primitives/src/actor.rs)
+- ##### 我们用什么 channel 实现 actor？SPSC, SPMC, MPSC？
+- ##### 创建 actor 时，`pid` 是什么？
+- ##### 给 actor 发送一个 message 后，actor 如何回复给发送者（`handle_call`）？
 
 ---
 
-## References
+## 参考资料
 
 - CAS: https://en.wikipedia.org/wiki/Compare-and-swap
 - Ordering: https://doc.rust-lang.org/std/sync/atomic/enum.Ordering.html
@@ -1168,19 +1104,14 @@ impl<T> Lock<T> {
 
 ---
 
-### Things to do with atomics
+<!-- _backgroundColor: #264653 -->
+<!-- _color: #e1e1e1 -->
 
-- lock free data structure
-- in memory metrics
-- id generation
-
----
-
-## Concurrency - async/await
+## 并发 - async/await
 
 ---
 
-### Using threads in Rust
+### 在 Rust 中使用线程
 
 ```rust
 use std::thread;
@@ -1211,15 +1142,15 @@ fn main() {
 
 ---
 
-### Drawbacks of threads
+### 线程的缺点
 
-- large stack (not suitable for heavy loaded concurrent jobs - e.g. a web server)
-- context switch is out of your control
-- lots of syscall involved (costly when # of threads is high)
+- 调用栈太大（不适合大量高并发任务 - 如 web server）
+- 上下文切换不受控制
+- 上下文切换效率不高（尤其大量线程的环境）
 
 ---
 
-### What are alternative solutions?
+### 有什么替代方案？
 
 ---
 
@@ -1318,9 +1249,7 @@ async function run() {
 
 ---
 
-### Demo: writing a server in rust
-
-##### It uses [async-prost](#77), tokio and prost
+### Live coding: kv store
 
 ---
 
@@ -1330,13 +1259,13 @@ async function run() {
 
 ---
 
-### An event store example
+### Event store 例子
 
 ![height:500px](images/async-example.png)
 
 ---
 
-## References
+## 参考文档
 
 - [Future explained](https://cfsamson.github.io/books-futures-explained)
 - [Rust async book](https://rust-lang.github.io/async-book)
