@@ -12,4 +12,5 @@ members = [
 
   # live coding
   "live_coding/hello_world",
+  "live_coding/training_code",
 ]

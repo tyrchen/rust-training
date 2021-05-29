@@ -2490,6 +2490,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "training_code"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "trust-dns-proto"
 version = "0.19.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
