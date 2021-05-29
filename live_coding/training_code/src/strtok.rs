@@ -19,7 +19,6 @@ pub fn strtok<'a>(s: &'a mut &str, pat: char) -> &'a str {
 
 #[cfg(test)]
 mod tests {
-    use std::thread;
 
     use super::*;
 

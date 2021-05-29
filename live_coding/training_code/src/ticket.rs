@@ -49,7 +49,7 @@ mod test {
         let museum = Museum::new(50);
         let ticket = museum.get_ticket().unwrap();
         assert_eq!(museum.tickets(), 49);
-        let tickets: Vec<Ticket> = (0..49).map(|_i| museum.get_ticket().unwrap()).collect();
+        let _tickets: Vec<Ticket> = (0..49).map(|_i| museum.get_ticket().unwrap()).collect();
         assert_eq!(museum.tickets(), 0);
 
         assert!(museum.get_ticket().is_none());
