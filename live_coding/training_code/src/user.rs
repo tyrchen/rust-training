@@ -12,6 +12,7 @@ pub enum Gender {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[repr(C)]
 pub struct User {
     pub name: String,
     age: u8,
