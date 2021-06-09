@@ -31,7 +31,7 @@ theme: uncover
 - [Concurrency - primitives](#83)
 - [Concurrency - async/await](#113)
 - [Networking and security](#129)
-- FFI with C/Elixir/Swift/Java
+- [FFI with C/Elixir/Swift/Java](#143)
 - WASM/WASI
 - Rust for real-world problems
 
@@ -1391,6 +1391,171 @@ deps: prost / tonic
 <!-- _color: #e1e1e1 -->
 
 ## FFI with C/Elixir/Swift/Java
+
+---
+
+### Why do we need cross-lang interoperatability?
+
+- Use the right tool for the right problem
+- (For Rust) We may want to leverage C/++ libraries
+- (For other lang) We may want to bring Rust ecosystem to solve the problem
+  - e.g. elixir doesn't have a good lib to generate cert, so we leverage `rcgen` from Rust
+- (For other lang) We may want to improve the performance for certain use cases
+  - e.g. use rust to do computation intensive job in Python
+- avoid building same logic in multiple platforms
+
+---
+
+### Rust to use C
+
+```Rust
+extern crate libc;
+use libc::size_t;
+
+#[link(name = "snappy")]
+extern "C" {
+    fn snappy_max_compressed_length(source_length: size_t) -> size_t;
+}
+
+fn main() {
+    let len = 10000;
+    let result = unsafe { snappy_max_compressed_length(len) };
+    println!("max compressed length for {} byte buffer: {}", len, result);
+}
+```
+
+---
+
+### Rust to be used by
+
+- Elixir: [Rustler](https://github.com/rusterlium/rustler)
+- Python: [PyO3](https://github.com/PyO3/pyo3)
+- Nodejs: [neon](https://github.com/neon-bindings/neon)
+- Swift: [cbingen](https://github.com/eqrion/cbindgen)
+- Java: [jni-rs](https://github.com/jni-rs/jni-rs), [flapigen-rs](https://github.com/Dushistov/flapigen-rs), [robusta](https://github.com/giovanniberti/robusta)
+
+---
+
+### Elixir: Rustler
+
+```rust
+#[rustler::nif]
+fn eval(policy: &str, app: &str, country: &str, platform: &str) -> bool {
+    eval_policy(policy, app, country, platform)
+}
+
+rustler::init!("Elixir.PolicyEngine.Nif", [eval]);
+```
+
+##### Rustler version: 0.22.0-rc.1
+
+---
+
+### Python: PyO3
+
+```rust
+use pyo3::prelude::*;
+use pyo3::wrap_pyfunction;
+
+#[pyfunction]
+fn num_cpus() -> PyResult<usize> {
+    Ok(num_cpus::get())
+}
+
+#[pymodule]
+fn rust_utils(_py: Python, m: &PyModule) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(num_cpus, m)?)?;
+
+    Ok(())
+}
+```
+
+---
+
+### Nodejs: neon
+
+```rust
+use neon::prelude::*;
+
+fn hello(mut cx: FunctionContext) -> JsResult<JsString> {
+    Ok(cx.string("hello node"))
+}
+
+fn num_cpus(mut cx: FunctionContext) -> JsResult<JsNumber> {
+    Ok(cx.number(num_cpus::get() as f64))
+}
+
+#[neon::main]
+fn main(mut cx: ModuleContext) -> NeonResult<()> {
+    cx.export_function("hello", hello)?;
+    cx.export_function("num_cpus", num_cpus)?;
+    Ok(())
+}
+```
+
+---
+
+### Java: robusta
+
+```rust
+use robusta_jni::bridge;
+use robusta_jni::convert::Signature;
+
+#[bridge]
+mod jni {
+    #[derive(Signature)]
+    #[package(com.example.hello)]
+    struct HelloWorld;
+
+    impl HelloWorld {
+        pub extern "jni" fn special(mut input1: Vec<i32>, input2: i32) -> Vec<String> {
+            input1.push(input2);
+            input1.iter().map(ToString::to_string).collect()
+        }
+    }
+}
+```
+
+
+---
+
+### Things to consider
+
+- Avoiding throwing panics over the FFI (which is undefined behavior)
+- Translating rust errors (and panics) into errors that the caller on the other side of the FFI is able to handle
+- Converting strings to/from rust str
+- Passing non-string data back and forth between Rust and whatever the caller on the other side of the FFI is.
+  - use the data structure conversion methods in target language (e.g. `repr(C)`)
+  - serialized with JSON / protobuf / flatbuffer / etc. (just like js-bridge!)
+
+
+---
+
+### A realworld example for swift: Arch
+
+![height:500px](images/ffi-arch.png)
+
+
+---
+
+### Communication channel
+
+![height:500px](images/ffi-bridge.jpg)
+
+---
+
+### PoC code (olorin)
+
+![height:500px](images/swift-test.jpg)
+
+---
+
+### References
+
+- ng-policy (private): poc for policy
+- olorin (private): poc for swift/rust comm
+- [Rust FFI intro](https://doc.rust-lang.org/nomicon/ffi.html)
+- [ffi-support](https://github.com/mozilla/ffi-support)
 
 ---
 
