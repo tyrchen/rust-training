@@ -26,8 +26,8 @@ theme: uncover
 </style>
 
 - [快速掌握新 crates 的方法](#2)
-- [Rust 值得关注的 crates](#5)
-- [Live coding](#10)
+- [Rust 值得关注的 crates](#8)
+- [Live coding](#15)
 
 ---
 
