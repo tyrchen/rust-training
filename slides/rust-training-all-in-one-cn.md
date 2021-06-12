@@ -1274,6 +1274,78 @@ async function run() {
 
 ---
 
+## 回顾第一讲
+
+---
+
+### Copy & Move
+
+```rust
+let a = 10;
+let b = vec![1, 2, 3];
+{
+  let (x, y) = (a, b);
+}
+let c = a; // 合法么？
+let d = b; // 合法么？
+```
+
+---
+
+### Drop
+
+```rust
+{
+  let s1 = "Hello world".to_string();
+  let arr = vec![Box::new(s1)];
+}
+```
+
+###### 当 `Drop` 发生时，谁先被 drop？(lifetime 短的)
+
+---
+
+### Sized / DST
+
+---
+
+### 静态分派
+
+---
+
+### 最好实现的 Trait
+
+- Debug/Default/Clone
+- Send/Sync/Unpin（一般自动实现了）
+- PartialEq/PartialOrd/Hash/Eq/Ord
+- Serialize/Deserialize (use feature flag)
+- Iterator
+- Deref<Target> / AsRef / From<T>> / Into<T>
+
+
+---
+
+### Rust Test 是怎么工作的？
+
+- unit test
+- integration test
+- doctest
+- fuzz
+- proptest
+- benchmark
+
+---
+
+
+### Future: Leaf / Non-leaf
+
+- Leaf: 内部事件（e.g. event）/ 外部事件（e.g. io）
+---
+
+### Live coding: ???
+
+---
+
 ## Networking and security
 
 ---

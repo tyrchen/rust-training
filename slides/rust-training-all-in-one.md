@@ -1428,6 +1428,7 @@ fn main() {
 
 ### Rust to be used by
 
+- C++: [autocxx](https://github.com/google/autocxx)
 - Elixir: [Rustler](https://github.com/rusterlium/rustler)
 - Python: [PyO3](https://github.com/PyO3/pyo3)
 - Nodejs: [neon](https://github.com/neon-bindings/neon)

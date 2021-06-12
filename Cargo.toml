@@ -8,6 +8,9 @@ members = [
   "code/primitives",
   "code/network",
   "code/tokio-server",
+  "code/snappy-test",
+  "code/cpu-count",
+  "code/pyo3-test",
   "code/simple_asm",
 
   # live coding
