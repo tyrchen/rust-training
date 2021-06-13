@@ -153,7 +153,19 @@ theme: uncover
 
 ---
 
-### Live coding（有时间的话）：TBD
+### Learning
+
+- headless_chrome 质量一般（capture snapshot!!!）
+- 你遇到的大部分问题，别人也遇到了，善用搜索
+- 速度比想象慢，release mode 速度好很多
+- 最后总结：
+  - https://github.com/atroche/rust-headless-chrome/issues/227
+  - https://github.com/atroche/rust-headless-chrome/pull/233/files
+
+```bash
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Error("unknown variant `marker`, expected one of `first-line`, `first-letter`, `before`, `after`, `backdrop`, `selection`, `first-line-inherited`, `scrollbar`, `scrollbar-thumb`, `scrollbar-button`, `scrollbar-track`, `scrollbar-track-piece`, `scrollbar-corner`, `resizer`, `input-list-button`", line: 0, column: 0)', /Users/tchen/.cargo/registry/src/github.com-1ecc6299db9ec823/headless_chrome-0.9.0/src/protocol/mod.rs:90:70
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
 
 ---
 

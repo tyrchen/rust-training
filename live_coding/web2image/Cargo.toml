@@ -1,0 +1,17 @@
+[package]
+name = "web2image"
+version = "0.1.0"
+authors = ["Tyr Chen <tyr.chen@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1"
+headless_chrome = { git = "https://github.com/atroche/rust-headless-chrome" }
+qrcode = "0.12"
+image = "0.23"
+clap = "3.0.0-beta.2"
+url = "2"
+
+failure = "0.1"
