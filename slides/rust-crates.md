@@ -47,7 +47,8 @@ theme: uncover
 
 ### 快速尝试 crates 的方法
 
-- 快速阅读文档
+- 带着问题
+- 快速阅读文档（why，what，how）
 - 了解相关的知识（包括 ecosystem）
 - clone repo
 - 尝试 example（并用自己的方式实现某些 example）
@@ -146,7 +147,7 @@ theme: uncover
 
 - 工具：clap，rust-headless-chrome，qrcode-rust
 - 思路：
-  - clap 提供基本命令行 `web2png <url> --with-qr-code`
+  - clap 提供基本命令行 `web2image <url> --output <path:/tmp/screenshot.jpg>`
   - 使用 headless_chrome 抓取 url，存储为图片
   - 使用 qrcode-rust 对 URL 生成 QR code，添加到图片中
 

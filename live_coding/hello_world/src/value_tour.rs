@@ -32,7 +32,7 @@ pub fn value_tour() {
         data.push(5);
     });
 
-    data.push(4);
+    // data.push(4);
 }
 
 fn print_my_name(name: String) {
