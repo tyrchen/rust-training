@@ -10,7 +10,7 @@ use image::{
 };
 use qrcode::QrCode;
 
-// unfortunately we can't do this
+// unfortunately we can't do this since we don't own either Fail/Error trait
 // impl From<dyn failure::Fail> for Box<dyn std::error::Error + 'static> {
 //     fn from(_: dyn failure::Fail) -> Self {
 //         ...
@@ -23,8 +23,13 @@ fn url2image(url: &str) -> Result<DynamicImage> {
         anyhow!(e.to_string())
     }
 
-    let browser =
-        Browser::new(LaunchOptionsBuilder::default().build().unwrap()).map_err(to_anyhow)?;
+    let browser = Browser::new(
+        LaunchOptionsBuilder::default()
+            .window_size(Some((1200, 1600)))
+            .build()
+            .unwrap(),
+    )
+    .map_err(to_anyhow)?;
     let tab = browser.wait_for_initial_tab().map_err(to_anyhow)?;
     let viewport = tab
         .navigate_to(url)
@@ -39,6 +44,10 @@ fn url2image(url: &str) -> Result<DynamicImage> {
 
     dbg!(&viewport);
 
+    // this is a hack for headless chrome as it cannot handle the case that
+    // viewport is bigger than window size. I guess pupeeteer have a solution
+    // there but for this quick-and-dirty live coding, let's just open a new
+    // tab and set its width/height.
     let tab = browser
         .new_tab_with_options(CreateTarget {
             url,

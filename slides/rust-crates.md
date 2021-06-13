@@ -21,10 +21,6 @@ theme: uncover
 
 # 如何快速掌握新的 crates？
 
-<style scoped>
-    ul { columns: 2; width: 90%; }
-</style>
-
 - [快速掌握新 crates 的方法](#2)
 - [Rust 值得关注的 crates](#8)
 - [Live coding](#15)

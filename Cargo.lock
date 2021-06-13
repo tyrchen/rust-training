@@ -3706,7 +3706,6 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
- "failure",
  "headless_chrome",
  "image",
  "qrcode",

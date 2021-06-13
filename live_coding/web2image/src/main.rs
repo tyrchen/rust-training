@@ -42,6 +42,7 @@ fn valid_url(url: &str) -> Result<(), String> {
 /// "/tmp/abc.pdf" => "/tmp" exists, pdf (png | jpg | jpeg)
 fn valid_filename(name: &str) -> Result<(), String> {
     let path = Path::new(name);
+    // TODO: we have a small issue here. Have you found it?
     let parent = path.parent().and_then(|p| p.is_dir().then(|| p));
     let ext = get_image_format(path);
 
