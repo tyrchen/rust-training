@@ -30,6 +30,10 @@ theme: uncover
 - [类型系统和泛型编程](#62)
 - [并发 - 原语](#84)
 - [并发 - async/await](#113)
+- [回顾第一讲](#129)
+- [网络协议](#139)
+- [网络安全](#150)
+- [宏编程](#164)
 
 ---
 
@@ -1307,13 +1311,21 @@ let d = b; // 合法么？
 
 ### Sized / DST
 
+- Sized: 编译期 - 可以放在栈上
+  - Rust 有 `Sized` trait 和 `?Sized` trait bound
+  - 所有的泛型结构默认 `T: Sized`
+- DST: 运行期 - 一般只能放在堆上([stack_dst](https://github.com/thepowersgang/stack_dst-rs))
+  - trait object
+  - [T] / str
+  - struct / tuple 包含 DST（如：`Mutex`）
+  - 对于 DST，指针是 "fat pointer"
+- 问题：
+  - Q1：指向 slice 的指针在堆还是栈上？
+  - Q2：很多数据结构，如 Mutex 包含 DST，为什么它能放在栈上？
+
 ---
 
-### 静态分派
-
----
-
-### 最好实现的 Trait
+### Rust 编程范式：实现基本 trait
 
 - Debug/Default/Clone
 - Send/Sync/Unpin（一般自动实现了）
@@ -1322,114 +1334,356 @@ let d = b; // 合法么？
 - Iterator
 - Deref<Target> / AsRef / From<T>> / Into<T>
 
-
 ---
 
 ### Rust Test 是怎么工作的？
 
 - unit test
-- integration test
 - doctest
-- fuzz
-- proptest
-- benchmark
+- integration test：见 [tonic](https://github.com/hyperium/tonic/blob/master/tests/integration_tests/tests/connection.rs)
+- fuzz：`honggfuzz-rs`（见 [snow](https://github.com/mcginty/snow/blob/master/hfuzz/src/bin/params.rs)）
+- proptest：`quickcheck` 或 `proptest` （见：[cellar](https://github.com/tyrchen/cellar/blob/master/cellar-core/src/lib.rs)）
+- benchmark：`[benchmark]` 现在还是 unstable，可以用 `criterion`（见：[cellar](https://github.com/tyrchen/cellar/blob/master/cellar-core/benches/bench_cellar.rs)）
 
 ---
-
 
 ### Future: Leaf / Non-leaf
 
-- Leaf: 内部事件（e.g. event）/ 外部事件（e.g. io）
+- Leaf：一般是运行时定义的内部事件（e.g. event）/ 外部事件（e.g. io）
+  - `tokio::time::Sleep`
+  - `tokio::net::TcpStream`
+- non-leaf：一般用 async 定义的 future
+  - `async move {}`
+
+```rust
+let fut = async {
+  let mut stream = TcpStream::connect("localhost:8000").await?;
+  stream.write(b"hello world\n").await?;
+}
+```
+
 ---
 
-### Live coding: ???
+### Pin
+
+- 自我引用结构在 Rust 下的问题
+  - 移动时会出现指针指向的问题
+- `Pin<P>` 作用的类型是指针，只要 `P` 没实现 `Unpin`，类型系统可以保证 T 不会被移动
+  - 如果 `P` 是 `!Unpin`，`Pin<P>` 无法 `deref_mut`
+
+```rust
+impl<P: DerefMut<Target: Unpin>> DerefMut for Pin<P> {
+    fn deref_mut(&mut self) -> &mut P::Target {
+        Pin::get_mut(Pin::as_mut(self))
+    }
+}
+```
+
+- `Unpin` 是个 auto trait，编译器会自动实现
+  - 但  `impl Future` 是 `!Unpin`
+- [pin_project](https://github.com/taiki-e/pin-project)
+
+![bg left:40% fit](images/swap_problem.jpeg)
 
 ---
 
-## Networking and security
+### (tokio) AsyncRead / AsyncWrite
+
+```rust
+pub trait AsyncRead {
+    fn poll_read(self: Pin<&mut Self>, cx: &mut Context<'_>, buf: &mut ReadBuf<'_>)
+      -> Poll<Result<()>>;
+}
+
+pub trait AsyncWrite {
+    fn poll_write(self: Pin<&mut Self>, cx: &mut Context<'_>, buf: &[u8])
+      -> Poll<Result<usize, Error>>;
+    fn poll_flush(self: Pin<&mut Self>, cx: &mut Context<'_>)
+      -> Poll<Result<(), Error>>;
+}
+```
+
+[AsyncRead](https://docs.rs/tokio/1.7.1/tokio/io/trait.AsyncRead.html) / [AsyncWrite](https://docs.rs/tokio/1.7.1/tokio/io/trait.AsyncWrite.html)
 
 ---
 
-### Network Stack
+### (futures) Stream / Sink
+
+```rust
+#[must_use = "streams do nothing unless polled"]
+pub trait Stream {
+    type Item;
+    fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>>;
+}
+
+#[must_use = "sinks do nothing unless polled"]
+pub trait Sink<Item> {
+    type Error;
+    fn poll_ready(self: Pin<&mut Self>, cx: &mut Context<'_>)
+      -> Poll<Result<(), Self::Error>>;
+    fn start_send(self: Pin<&mut Self>, item: Item)
+      -> Result<(), Self::Error>;
+    fn poll_flush(self: Pin<&mut Self>, cx: &mut Context<'_>)
+      -> Poll<Result<(), Self::Error>>;
+    fn poll_close(self: Pin<&mut Self>, cx: &mut Context<'_>)
+      -> Poll<Result<(), Self::Error>>;
+}
+```
+
+[Stream](https://docs.rs/futures/0.3.15/futures/prelude/stream/trait.Stream.html) / [Sink](https://docs.rs/futures/0.3.15/futures/prelude/trait.Sink.html)
+
+---
+
+## 网络协议
+
+---
+
+### 网络协议栈
 
 ![height:500px](images/network-stack.png)
 
 
 ---
 
-### App for centralized network
+### 中心化服务的一般设计
 
 ![height:500px](images/centralized-network.png)
 
 ---
 
-
-### App for p2p network
-
-![height:500px](images/p2p-network.jpg)
-
----
-
-### Rust Network Stacks
+### Rust 对网络协议的支持
 
 ![height:500px](images/rust-network-stack.png)
 
 ---
 
-### Demo: Build a TCP server (sync/async)
-
-deps: stdlib / tokio
+### std::net
 
 ---
 
-### Demo: HTTP Client/Server
-
-deps: reqwest / actix-web
+### tokio:net
 
 ---
 
-### Demo: gRPC
+### Live coding: kv store (基于 tokio)
 
-deps: prost / tonic
-
----
-
-### Steps to write a server
-
-- data serialization: serde / protobuf / flatbuffer / capnp / etc.
-- transport protocol: tcp / http / websocket / quic / etc.
-- security layer: TLS / noise protocol / secio / etc.
-- application layer: your own application logic
+- 使用 protobuf (prost) 设计 kv store 的传输协议
+- 用 tokio TcpListener / TcpStream 实现客户端和服务器的交互
+- 使用 dashmap 在内存中存储 kv
 
 ---
 
-### Network Security
+### 家庭作业：用 sled 替换 dashmap
+
+#### 让 kv store 可持久化
 
 ---
 
-### TLS (skip)
+### 撰写服务端的一般方法
+
+- 数据序列化: serde / protobuf / flatbuffer / capnp / etc.
+- 传输协议: tcp / http / websocket / quic / etc.
+- 安全协议: TLS / noise protocol / secio / etc.
+- 应用协议: your own application logic
+- 数据在各个部分之间的流传：共享内存，channel 等
 
 ---
 
-### Noise Protocol
+### tonic：Rust 下 GRPC 服务
+
+- tower-service
+- 基于 prost，生成 [ProstCodec](https://docs.rs/tonic/0.4.3/src/tonic/codec/prost.rs.html#9-11)
+- 为你的 grpc service 定义生成 `Service` trait
+
+```rust
+pub trait Service<Request> {
+    type Response;
+    type Error;
+
+    type Future: Future<Output = Result<Self::Response, Self::Error>>;
+    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>>;
+    fn call(&mut self, req: Request) -> Self::Future;
+}
+```
+
+---
+
+### live coding: PoW 服务
+
+- 用 tonic 实现网络层（submit/subscribe）
+- 用 std::thread 做计算密集型任务（PoW）
+- 用 channel 连接异步/同步世界
+- API: `subscribe` / `submit`
+
+---
+
+## 网络安全
+
+---
+
+### 当我们谈论网络安全的时候，我们在谈论什么？
+
+![bg right fit](images/security.png)
+
+---
+
+### 应用层安全
+
+- 使用标准协议 - TLSv1.3
+- 构建你自己的安全协议 - Noise Protocol
+- 应用层安全的基石：DH 算法
+
+![bg right fit](images/ecdh.png)
+
+---
+
+## Rust TLS 支持
+
+- openssl
+- rustls (基于 ring)
+- tokio-tls-helper
+
+---
+
+<!-- _backgroundColor: #1e1e1e -->
+<!-- _color: #e1e1e1 -->
+
+![bg right fit](images/tls_config.jpg)
+
+### 配置
+
+- 客户端：domain，CA cert
+- 服务器：cert / key
+
+---
+
+<!-- _backgroundColor: #1e1e1e -->
+<!-- _color: #e1e1e1 -->
+
+![bg right fit](images/tls_code.jpg)
+
+### 代码
+
+- 服务器
+  - 加载配置 `ServerTlsConfig`
+  - 准备好 `TLS acceptor`
+  - `acceptor.accept(tcp_stream)`
+- 客户端
+  - 加载配置 `ClientTlsConfig`
+  - 准备好 `TLS connector`
+  - `connector.connect(tcp_stream)`
+
+---
+
+## Noise Protocol
+
+- TLS vs Noise protocol：动态协商 vs 静态协商
+- Noise_IKpsk2_25519_ChaChaPoly_BLAKE2s：
+  - I：发起者的固定公钥未加密就直接发给应答者
+  - K：应答者的公钥发起者预先就知道
+  - psk2：把预设的密码（Pre-Shared-Key ）放在第 2 个握手包之后
+  - ChaChaPoly：对称加密算法
+  - BLAKE2s：哈希算法
+- 协议最少 [0-RTT](https://noiseexplorer.com/patterns/X/) (x 或者 xpsk），之后就建立好加密通道，可以发送数据
+
+---
+
+## Noise Protocol 接口
+
+- build：根据协议变量和固定私钥，初始化 HandshakeState
+- write(msg, buf): 根据当前的状态，撰写协议报文或者把用户传入的 buffer 加密
+- read(buf, msg)：根据当前的状态，读取用户传入的 buffer，处理握手状态机或者把用户传入的 buffer 解密
+- into_transport_mode：将 `HandshakeState` 转为 `TransportState`
+- rekey：在传输模式下，用户可以调用 rekey 来更新密钥
+
+---
 
 ![height:500px](images/noise-process.jpg)
 
 ---
 
-### Demo for noise protocol
+<!-- _backgroundColor: #1e1e1e -->
+<!-- _color: #e1e1e1 -->
+
+![bg right fit](images/noise_code.jpg)
+
+### 代码（0-RTT）
+
+- Initiator:
+  - 构建 `HandshakeState`
+  - 发送握手数据
+  - 进入传输模式
+- Responder:
+  - 构建 `HandshakeState`
+  - 接收握手数据
+  - 进入传输模式
 
 ---
 
+### live coding: 使用 noise protocol 增强 kv store 的安全性
 
-### References
+- 实现 NoiseCodec？
+- 实现 Stream / Sink？
+
+---
+
+### P2P 应用的一般结构
+
+![height:500px](images/p2p-network.jpg)
+
+---
+
+### Live coding：p2p 聊天
+
+- 使用 mDNS 做本地节点的发现
+- 使用 gossipsub 广播数据
+
+---
+
+### 参考资料
 
 - [GRPC Protocol](https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-HTTP2.md)
 - [Are we web yet?](https://www.arewewebyet.org/)
 - [Tonic: rust grpc framework](https://github.com/hyperium/tonic)
+- [snow](https://github.com/mcginty/snow)
+- [Rust 的 Pin 与 Unpin](https://folyd.com/blog/rust-pin-unpin/)
 
 ---
 
+## 宏编程
+
+---
+
+### 声明宏
+
+- `macro_rules!`
+- `#[macro_use]` / `#[macro_export]`
+
+---
+
+### Live coding: `vec!` 和 `prost_into_vec!`
+
+---
+
+### 过程宏
+
+- 类函数宏（function-like macros）：`println!(...)`
+- 派生宏（derive macros）：`#[derive(Debug)]`
+- 标记宏（attribute macros）：`#[tokio::main]`
+
+---
+
+### Live coding: 使用 derive macro 实现 builder pattern
+
+---
+
+### 参考资料
+
+- [mscros by example](https://doc.rust-lang.org/reference/macros-by-example.html)
+- [syn](https://github.com/dtolnay/syn)
+- [quote](https://github.com/dtolnay/quote)
+
+---
 
 <!-- _backgroundColor: #264653 -->
 <!-- _color: #e1e1e1 -->
