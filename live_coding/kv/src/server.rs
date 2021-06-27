@@ -1,8 +1,9 @@
+mod noise_codec;
 mod pb;
 
 use anyhow::Result;
+use noise_codec::{NoiseCodec, NoiseStream, NOISE_PARAMS};
 use std::{convert::TryInto, sync::Arc};
-use tokio_util::codec::LengthDelimitedCodec;
 
 use dashmap::DashMap;
 use futures::{SinkExt, StreamExt};
@@ -48,9 +49,21 @@ async fn main() -> Result<()> {
         let shared = state.clone();
 
         tokio::spawn(async move {
-            let mut stream = LengthDelimitedCodec::builder()
-                .length_field_length(2)
-                .new_framed(stream);
+            let mut stream = NoiseCodec::builder(NOISE_PARAMS, false).new_framed(stream)?;
+            // <- e
+            let data = stream.next().await.unwrap()?;
+            info!("<- e");
+
+            // -> e, ee, s, es
+            stream.send(data.freeze()).await?;
+            info!("-> e, ee, s, es");
+
+            // <- s, se
+            let _data = stream.next().await.unwrap()?;
+            info!("<- s, se");
+
+            stream.into_transport_mode()?;
+
             while let Some(Ok(buf)) = stream.next().await {
                 let msg: Request = buf.try_into()?;
                 info!("Got a command: {:?}", msg);

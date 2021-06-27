@@ -1690,6 +1690,7 @@ dependencies = [
  "futures",
  "prost",
  "prost-build",
+ "snow",
  "tokio 1.6.1",
  "tokio-util 0.6.7",
  "tracing",
