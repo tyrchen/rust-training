@@ -1479,7 +1479,7 @@ pub trait Sink<Item> {
 
 ---
 
-### 撰写服务端的一般方法
+### 服务端应用的基本组成部分
 
 - 数据序列化: serde / protobuf / flatbuffer / capnp / etc.
 - 传输协议: tcp / http / websocket / quic / etc.
