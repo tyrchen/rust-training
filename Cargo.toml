@@ -18,4 +18,5 @@ members = [
   "live_coding/training_code",
   "live_coding/web2image",
   "live_coding/kv",
+  "live_coding/pow",
 ]
