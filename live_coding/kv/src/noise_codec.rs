@@ -1,8 +1,11 @@
 use anyhow::Result;
+use async_trait::async_trait;
 use bytes::{Buf, BufMut, Bytes, BytesMut};
+use futures::{SinkExt, StreamExt};
 use snow::{HandshakeState, TransportState};
 use tokio::io::{AsyncRead, AsyncWrite};
 use tokio_util::codec::{Decoder, Encoder, Framed};
+use tracing::info;
 
 pub const NOISE_PARAMS: &str = "Noise_XX_25519_ChaChaPoly_BLAKE2s";
 const HEADER_LEN: usize = 2;
@@ -57,16 +60,47 @@ impl NoiseCodec {
     }
 }
 
+#[async_trait]
 pub trait NoiseStream {
-    fn into_transport_mode(&mut self) -> Result<(), snow::Error>;
+    async fn handshake(self: &mut Self) -> Result<()>;
 }
 
+#[async_trait]
 impl<S> NoiseStream for Framed<S, NoiseCodec>
 where
-    S: AsyncRead + AsyncWrite,
+    S: AsyncRead + AsyncWrite + Send + Sync + Unpin,
 {
-    fn into_transport_mode(&mut self) -> Result<(), snow::Error> {
-        self.codec_mut().into_transport_mode()
+    async fn handshake(self: &mut Self) -> Result<()> {
+        match self.codec().builder.initiator {
+            true => {
+                // -> e
+                self.send(Bytes::from_static(&[])).await?;
+                info!("-> e");
+
+                // <- e, ee, s, es
+                let data = self.next().await.unwrap()?;
+                info!("<- e, ee, s, es");
+
+                // -> s, se
+                self.send(data.freeze()).await?;
+                info!("-> s, se");
+            }
+            false => {
+                // <- e
+                let data = self.next().await.unwrap()?;
+                info!("<- e");
+
+                // -> e, ee, s, es
+                self.send(data.freeze()).await?;
+                info!("-> e, ee, s, es");
+
+                // <- s, se
+                let _data = self.next().await.unwrap()?;
+                info!("<- s, se");
+            }
+        }
+        self.codec_mut().into_transport_mode()?;
+        Ok(())
     }
 }
 

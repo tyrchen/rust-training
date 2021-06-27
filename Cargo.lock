@@ -1685,6 +1685,7 @@ name = "kv"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "async-trait",
  "bytes 1.0.1",
  "dashmap",
  "futures",
