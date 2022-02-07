@@ -20,7 +20,7 @@ members = [
   "live_coding/kv",
   "live_coding/pow",
 
-  # prost 大巡礼
+  # intro to crates
   "live_coding/axum-live",
   "live_coding/prost-live",
 ]

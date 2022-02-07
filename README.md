@@ -6,13 +6,13 @@
 
 ## Videos
 
-Note: all videos are in Chinese (所有视频语言均为中文).
+Note: all videos are in Chinese (所有视频语言均为中文，连接).
 
 Videos regarding the crates intro:
 
-1. [Rust crates intro: Prost Intro](https://www.bilibili.com/video/BV1FL4y1x7MU/)：[Source code]](live_coding/prost-live)
+1. [Rust crates intro: Prost Intro](https://www.bilibili.com/video/BV1FL4y1x7MU/)：[Source code](live_coding/prost-live)
 2. Rust crates intro: Axum 1-1: [Source code](live_coding/axum-live)
-3. Rust crates 大巡礼：Axum 1-2: [Source code](live_coding/axum-live)
+3. Rust crates intro: Axum 1-2: [Source code](live_coding/axum-live)
 
 Videos on macros（[source code](https://github.com/tyrchen/geektime-rust/tree/master/47_48_macros)）:
 
