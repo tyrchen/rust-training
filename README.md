@@ -6,7 +6,7 @@
 
 ## Videos
 
-Note: all videos are in Chinese (所有视频语言均为中文，连接).
+Note: all videos are in Chinese (所有视频语言均为中文).
 
 Videos regarding the crates intro:
 
