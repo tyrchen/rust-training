@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 axum = { version = "0.4", features = ["headers"] }
+headers = "0.3"
 jsonwebtoken = "8"
 mime_guess = "2"
 rust-embed = "6"

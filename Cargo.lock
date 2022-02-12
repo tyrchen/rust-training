@@ -521,6 +521,7 @@ name = "axum-live"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "headers",
  "jsonwebtoken",
  "mime_guess",
  "rust-embed",

@@ -2,12 +2,12 @@ use axum::{
     async_trait,
     body::{boxed, Full},
     extract::{Extension, FromRequest, RequestParts, TypedHeader},
-    headers::{authorization::Bearer, Authorization},
     http::{header, StatusCode, Uri},
     response::{IntoResponse, Response},
     routing::{get, post},
     AddExtensionLayer, Json, Router, Server,
 };
+use headers::{authorization::Bearer, Authorization};
 use jsonwebtoken as jwt;
 use jwt::Validation;
 use rust_embed::RustEmbed;
@@ -127,7 +127,7 @@ async fn static_handler(uri: Uri) -> impl IntoResponse {
 }
 
 async fn todos_handler(
-    claims: Claims,
+    CommonClaim(claims): CommonClaim<Claims>,
     Extension(store): Extension<TodoStore>,
 ) -> Result<Json<Vec<Todo>>, HttpError> {
     let user_id = claims.id;
@@ -145,7 +145,7 @@ async fn todos_handler(
 
 // eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibmFtZSI6IlR5ciBDaGVuIiwiZXhwIjoxNjQ1NDAyODkxfQ.3IIMcTmmtkz-4kaIHw5gIHXz-mhKXH-nrjxxLNNRYls
 async fn create_todo_handler(
-    claims: Claims,
+    CommonClaim(claims): CommonClaim<Claims>,
     Json(todo): Json<CreateTodo>,
     Extension(store): Extension<TodoStore>,
 ) -> Result<StatusCode, HttpError> {
@@ -199,12 +199,12 @@ where
                 HttpError::Auth
             })?;
 
-        Ok(token.claims)
+        Ok(CommonClaim(token.claims))
     }
 }
 
 #[derive(Debug)]
-enum HttpError {
+pub enum HttpError {
     Auth,
     Internal,
 }
