@@ -62,6 +62,7 @@ pub fn todo_filter<'a>(cx: Scope<'a, TodoFilterProps<'a>>) -> Element {
                         onclick: move |_| {
                             let mut todos = set_todos.make_mut();
                             todos.retain(|_, todo| !todo.completed);
+                            todos.save();
                         },
                         "Clear completed",
                     }

@@ -27,9 +27,12 @@ pub fn todo_item<'a>(cx: Scope<'a, TodoItemProps<'a>>) -> Element {
                 checked: "{todo.completed}",
                 onchange: move |e| {
                     info!("todo item toggled: {e:?}");
-                    set_todos.make_mut().get_mut(&id).map(|todo| {
+                    let mut todos = set_todos.make_mut();
+                    todos.get_mut(&id).map(|todo| {
                         todo.completed = e.value.parse().unwrap();
                     });
+                    todos.save();
+
                 }
             },
             label {
@@ -46,6 +49,7 @@ pub fn todo_item<'a>(cx: Scope<'a, TodoItemProps<'a>>) -> Element {
                 class: "edit",
                 value: "{todo.title}",
                 oninput: move |e| {
+                    info!("todo item edited: {e:?}");
                     let mut todos = set_todos.make_mut();
                     todos.get_mut(&id).map(|todo| {
                         todo.title = e.value.clone();
@@ -56,6 +60,8 @@ pub fn todo_item<'a>(cx: Scope<'a, TodoItemProps<'a>>) -> Element {
                     match e.key.as_str() {
                         "Enter" | "Escape" | "Tab" => {
                             set_is_editing(false);
+                            let todos = set_todos.get();
+                            todos.save();
                         },
 
                         _ => {}

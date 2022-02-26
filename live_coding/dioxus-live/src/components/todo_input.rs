@@ -1,10 +1,5 @@
-use std::sync::atomic::{AtomicU32, Ordering};
-
-use dioxus::prelude::*;
-
 use crate::{TodoItem, Todos};
-
-static NEXT_TODO_ID: AtomicU32 = AtomicU32::new(1);
+use dioxus::prelude::*;
 
 #[derive(Props)]
 pub struct TodoInputProps<'a> {
@@ -27,13 +22,16 @@ pub fn todo_input<'a>(cx: Scope<'a, TodoInputProps<'a>>) -> Element {
                 },
                 onkeydown: move |e| {
                     if e.key == "Enter" && !draft.is_empty() {
-                        let id = NEXT_TODO_ID.fetch_add(1, Ordering::Relaxed);
-                        set_todos.make_mut().insert(id, TodoItem {
+                        let mut todos = set_todos.make_mut();
+                        let id = todos.next_id;
+                        todos.next_id += 1;
+                        todos.insert(id, TodoItem {
                             id,
                             title: draft.clone(),
                             completed: false,
                         });
                         set_draft("".to_string());
+                        todos.save();
                     }
                 }
             }

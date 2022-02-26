@@ -2,17 +2,66 @@ mod components;
 
 use crate::components::{todo_filter, todo_input, todo_item};
 use dioxus::prelude::*;
-use std::collections::BTreeMap;
+use serde::{Deserialize, Serialize};
+use std::{
+    collections::BTreeMap,
+    ops::{Deref, DerefMut},
+};
 use tracing::info;
+use web_sys::Storage;
 
-#[derive(Debug, Clone, PartialEq)]
+const TODO_KEY: &str = "todos_dioxus";
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TodoItem {
     pub id: u32,
     pub title: String,
     pub completed: bool,
 }
 
-pub type Todos = BTreeMap<u32, TodoItem>;
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Todos {
+    items: BTreeMap<u32, TodoItem>,
+    next_id: u32,
+}
+
+impl Default for Todos {
+    fn default() -> Self {
+        let store = get_store();
+        let default_todos = Todos {
+            items: BTreeMap::new(),
+            next_id: 1,
+        };
+        let todos = if let Ok(Some(todos)) = store.get(TODO_KEY) {
+            serde_json::from_str(&todos).unwrap_or(default_todos)
+        } else {
+            default_todos
+        };
+        todos
+    }
+}
+
+impl Deref for Todos {
+    type Target = BTreeMap<u32, TodoItem>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.items
+    }
+}
+
+impl DerefMut for Todos {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.items
+    }
+}
+
+impl Todos {
+    pub fn save(&self) {
+        let store = get_store();
+        let content = serde_json::to_string(self).unwrap();
+        info!("saving todos: {content}");
+        store.set(TODO_KEY, &content).unwrap();
+    }
+}
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Filter {
@@ -23,7 +72,12 @@ pub enum Filter {
 
 impl Default for Filter {
     fn default() -> Self {
-        Filter::All
+        let url_hash = web_sys::window().unwrap().location().hash().unwrap();
+        match url_hash.as_str() {
+            "#/active" => Filter::Active,
+            "#/completed" => Filter::Completed,
+            _ => Filter::All,
+        }
     }
 }
 
@@ -58,4 +112,12 @@ pub fn app(cx: Scope) -> Element {
             }
         }
     })
+}
+
+pub fn get_store() -> Storage {
+    web_sys::window()
+        .unwrap()
+        .local_storage()
+        .unwrap()
+        .expect("User did not allow local storage")
 }
