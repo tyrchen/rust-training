@@ -13,3 +13,6 @@ tracing-wasm = "0.2"
 wasm-bindgen = "0.2"
 
 [workspace]
+
+[profile.release]
+strip = "debuginfo"
