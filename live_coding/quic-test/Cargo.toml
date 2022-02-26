@@ -1,0 +1,14 @@
+[package]
+name = "quic-test"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1"
+s2n-quic = { version = "1", default-features = false, features = ["provider-address-token-default", "provider-tls-rustls"] }
+s2n-quic-rustls = "0.1"
+tokio = { version = "1", features = ["full"] }
+
+[workspace]
