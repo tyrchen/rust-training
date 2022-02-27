@@ -25,14 +25,13 @@ pub fn todo_item<'a>(cx: Scope<'a, TodoItemProps<'a>>) -> Element {
                 r#type: "checkbox",
                 id: "todo-{todo.id}",
                 checked: "{todo.completed}",
-                onchange: move |e| {
-                    info!("todo item toggled: {e:?}");
+                onclick: move |e| {
+                    info!("todo item clicked: {e:?}");
                     let mut todos = set_todos.make_mut();
                     todos.get_mut(&id).map(|todo| {
-                        todo.completed = e.value.parse().unwrap();
+                        todo.completed = !todo.completed;
                     });
                     todos.save();
-
                 }
             },
             label {
