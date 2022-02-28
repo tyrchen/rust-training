@@ -10,7 +10,6 @@ pub struct TodoFilterProps<'a> {
 pub fn todo_filter<'a>(cx: Scope<'a, TodoFilterProps<'a>>) -> Element {
     let set_todos = cx.props.set_todos;
     let set_filter = cx.props.set_filter;
-    let filter = set_filter.get();
     let todos = set_todos.get();
 
     let items_left = todos.iter().fold(
@@ -23,17 +22,7 @@ pub fn todo_filter<'a>(cx: Scope<'a, TodoFilterProps<'a>>) -> Element {
         "items left"
     };
 
-    let show_clear_completed = todos.iter().any(|(_, todo)| todo.completed);
-    let active_text = |f| {
-        if filter.as_ref() == &f {
-            "selected"
-        } else {
-            ""
-        }
-    };
-    let all_class = active_text(Filter::All);
-    let active_class = active_text(Filter::Active);
-    let completed_class = active_text(Filter::Completed);
+    let show_clear_completed = todos.show_clear_completed();
 
     rsx!(
         cx,
@@ -44,16 +33,9 @@ pub fn todo_filter<'a>(cx: Scope<'a, TodoFilterProps<'a>>) -> Element {
                     span {" {item_text}" },
                 }
                 ul { class: "filters",
-                    li {
-                        a { class: "{ all_class }", href: "#/", onclick: move |_| set_filter(Filter::All),  "All" },
-                    },
-                    li {
-                    a { class: "{ active_class }", href: "#/active", onclick: move |_| set_filter(Filter::Active),  "Active" },
-                    },
-                    li {
-                    a { class: "{ completed_class }", href: "#/completed", onclick: move |_| set_filter(Filter::Completed),  "Completed" },
-
-                    },
+                    rsx!{cx, filter_item(item: Filter::All, set_filter: set_filter)}
+                    rsx!{cx, filter_item(item: Filter::Active, set_filter: set_filter)}
+                    rsx!{cx, filter_item(item: Filter::Completed, set_filter: set_filter)}
                 }
 
                 show_clear_completed.then(|| rsx! {
@@ -61,8 +43,7 @@ pub fn todo_filter<'a>(cx: Scope<'a, TodoFilterProps<'a>>) -> Element {
                         class: "clear-completed",
                         onclick: move |_| {
                             let mut todos = set_todos.make_mut();
-                            todos.retain(|_, todo| !todo.completed);
-                            todos.save();
+                            todos.clear_completed();
                         },
                         "Clear completed",
                     }
@@ -70,4 +51,46 @@ pub fn todo_filter<'a>(cx: Scope<'a, TodoFilterProps<'a>>) -> Element {
             }
         })
     )
+}
+
+#[derive(Props)]
+struct FilterItemProps<'a> {
+    pub item: Filter,
+    pub set_filter: &'a UseState<Filter>,
+}
+
+fn filter_item<'a>(cx: Scope<'a, FilterItemProps<'a>>) -> Element {
+    let item = cx.props.item;
+    let set_filter = cx.props.set_filter;
+    let filter = set_filter.get();
+
+    let class = if filter.as_ref() == &item {
+        "selected"
+    } else {
+        ""
+    };
+
+    let onclick = move |_| set_filter(item);
+
+    #[cfg(feature = "web")]
+    {
+        let href = match item {
+            Filter::All => "#/",
+            Filter::Active => "#/active",
+            Filter::Completed => "#/completed",
+        };
+
+        rsx! {cx,
+            li {
+                a { class: "{ class }", href: "{href}", onclick: onclick, "{item}" },
+            }
+        }
+    }
+
+    #[cfg(feature = "desktop")]
+    rsx! {cx,
+        li {
+            a { class: "{ class }", onclick: onclick, "{item}" },
+        }
+    }
 }

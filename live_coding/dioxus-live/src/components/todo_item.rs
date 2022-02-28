@@ -9,11 +9,14 @@ pub struct TodoItemProps<'a> {
 }
 
 pub fn todo_item<'a>(cx: Scope<'a, TodoItemProps<'a>>) -> Element {
-    let (is_editing, set_is_editing) = use_state(&cx, || false);
     let id = cx.props.id;
     let set_todos = cx.props.set_todos;
     let todos = set_todos.get();
     let todo = &todos[&id];
+
+    let (is_editing, set_is_editing) = use_state(&cx, || false);
+    let (draft, set_draft) = use_state(&cx, || todo.title.clone());
+
     let completed = if todo.completed { "completed" } else { "" };
     let editing = if *is_editing { "editing" } else { "" };
 
@@ -28,10 +31,7 @@ pub fn todo_item<'a>(cx: Scope<'a, TodoItemProps<'a>>) -> Element {
                 onclick: move |e| {
                     info!("todo item clicked: {e:?}");
                     let mut todos = set_todos.make_mut();
-                    todos.get_mut(&id).map(|todo| {
-                        todo.completed = !todo.completed;
-                    });
-                    todos.save();
+                    todos.toggle_todo(id);
                 }
             },
             label {
@@ -46,21 +46,18 @@ pub fn todo_item<'a>(cx: Scope<'a, TodoItemProps<'a>>) -> Element {
         is_editing.then(|| rsx! {
             input {
                 class: "edit",
-                value: "{todo.title}",
+                value: "{draft}",
                 oninput: move |e| {
                     info!("todo item edited: {e:?}");
-                    let mut todos = set_todos.make_mut();
-                    todos.get_mut(&id).map(|todo| {
-                        todo.title = e.value.clone();
-                    });
+                    set_draft(e.value.clone());
                 },
                 autofocus: "true",
                 onkeydown: move |e| {
                     match e.key.as_str() {
                         "Enter" | "Escape" | "Tab" => {
                             set_is_editing(false);
-                            let todos = set_todos.get();
-                            todos.save();
+                            let mut todos = set_todos.make_mut();
+                            todos.update_todo(id, draft);
                         },
 
                         _ => {}

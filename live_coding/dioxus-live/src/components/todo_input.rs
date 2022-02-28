@@ -1,4 +1,4 @@
-use crate::{TodoItem, Todos};
+use crate::Todos;
 use dioxus::prelude::*;
 
 #[derive(Props)]
@@ -23,15 +23,8 @@ pub fn todo_input<'a>(cx: Scope<'a, TodoInputProps<'a>>) -> Element {
                 onkeydown: move |e| {
                     if e.key == "Enter" && !draft.is_empty() {
                         let mut todos = set_todos.make_mut();
-                        let id = todos.next_id;
-                        todos.next_id += 1;
-                        todos.insert(id, TodoItem {
-                            id,
-                            title: draft.clone(),
-                            completed: false,
-                        });
+                        todos.create_todo(draft);
                         set_draft("".to_string());
-                        todos.save();
                     }
                 }
             }
