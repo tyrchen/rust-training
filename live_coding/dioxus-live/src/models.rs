@@ -92,6 +92,13 @@ impl Todos {
             .collect()
     }
 
+    pub fn items_left(&self) -> usize {
+        self.iter().fold(
+            0,
+            |acc, (_, todo)| if todo.completed { acc } else { acc + 1 },
+        )
+    }
+
     fn save(&self) {
         let store = get_store();
         info!("saving todos: {self:?}");

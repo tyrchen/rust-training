@@ -2,17 +2,16 @@ use crate::Todos;
 use dioxus::prelude::*;
 use tracing::info;
 
-#[derive(Props)]
-pub struct TodoItemProps<'a> {
+#[derive(Props, PartialEq)]
+pub struct TodoItemProps {
     pub id: u32,
-    pub set_todos: &'a UseState<Todos>,
 }
 
-pub fn todo_item<'a>(cx: Scope<'a, TodoItemProps<'a>>) -> Element {
+pub fn todo_item(cx: Scope<TodoItemProps>) -> Element {
     let id = cx.props.id;
-    let set_todos = cx.props.set_todos;
-    let todos = set_todos.get();
-    let todo = &todos[&id];
+    let todos = use_context::<Todos>(&cx)?;
+    let todos_read = todos.read();
+    let todo = todos_read.get(&id)?;
 
     let (is_editing, set_is_editing) = use_state(&cx, || false);
     let (draft, set_draft) = use_state(&cx, || todo.title.clone());
@@ -30,8 +29,7 @@ pub fn todo_item<'a>(cx: Scope<'a, TodoItemProps<'a>>) -> Element {
                 checked: "{todo.completed}",
                 onclick: move |e| {
                     info!("todo item clicked: {e:?}");
-                    let mut todos = set_todos.make_mut();
-                    todos.toggle_todo(id);
+                    todos.write().toggle_todo(id);
                 }
             },
             label {
@@ -56,8 +54,7 @@ pub fn todo_item<'a>(cx: Scope<'a, TodoItemProps<'a>>) -> Element {
                     match e.key.as_str() {
                         "Enter" | "Escape" | "Tab" => {
                             set_is_editing(false);
-                            let mut todos = set_todos.make_mut();
-                            todos.update_todo(id, draft);
+                            todos.write().update_todo(id, draft);
                         },
 
                         _ => {}

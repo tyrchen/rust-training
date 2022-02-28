@@ -1,49 +1,38 @@
 use crate::{Filter, Todos};
 use dioxus::prelude::*;
 
-#[derive(Props)]
-pub struct TodoFilterProps<'a> {
-    pub set_todos: &'a UseState<Todos>,
-    pub set_filter: &'a UseState<Filter>,
-}
+pub fn todo_filter(cx: Scope) -> Element {
+    let todos = use_context::<Todos>(&cx)?;
+    let todos_read = todos.read();
 
-pub fn todo_filter<'a>(cx: Scope<'a, TodoFilterProps<'a>>) -> Element {
-    let set_todos = cx.props.set_todos;
-    let set_filter = cx.props.set_filter;
-    let todos = set_todos.get();
-
-    let items_left = todos.iter().fold(
-        0,
-        |acc, (_, todo)| if todo.completed { acc } else { acc + 1 },
-    );
+    let items_left = todos_read.items_left();
     let item_text = if items_left == 1 {
         "item left"
     } else {
         "items left"
     };
 
-    let show_clear_completed = todos.show_clear_completed();
+    let show_clear_completed = todos_read.show_clear_completed();
 
     rsx!(
         cx,
-        (!todos.is_empty()).then(|| rsx! {
+        (!todos_read.is_empty()).then(|| rsx! {
             footer { class: "footer",
                 span { class: "todo-count",
                     strong { "{items_left}" },
                     span {" {item_text}" },
                 }
                 ul { class: "filters",
-                    rsx!{cx, filter_item(item: Filter::All, set_filter: set_filter)}
-                    rsx!{cx, filter_item(item: Filter::Active, set_filter: set_filter)}
-                    rsx!{cx, filter_item(item: Filter::Completed, set_filter: set_filter)}
+                    rsx!{cx, filter_item(item: Filter::All)}
+                    rsx!{cx, filter_item(item: Filter::Active)}
+                    rsx!{cx, filter_item(item: Filter::Completed)}
                 }
 
                 show_clear_completed.then(|| rsx! {
                     button {
                         class: "clear-completed",
                         onclick: move |_| {
-                            let mut todos = set_todos.make_mut();
-                            todos.clear_completed();
+                            todos.write().clear_completed();
                         },
                         "Clear completed",
                     }
@@ -53,24 +42,22 @@ pub fn todo_filter<'a>(cx: Scope<'a, TodoFilterProps<'a>>) -> Element {
     )
 }
 
-#[derive(Props)]
-struct FilterItemProps<'a> {
+#[derive(Props, PartialEq)]
+struct FilterItemProps {
     pub item: Filter,
-    pub set_filter: &'a UseState<Filter>,
 }
 
-fn filter_item<'a>(cx: Scope<'a, FilterItemProps<'a>>) -> Element {
+fn filter_item(cx: Scope<FilterItemProps>) -> Element {
     let item = cx.props.item;
-    let set_filter = cx.props.set_filter;
-    let filter = set_filter.get();
+    let filter = use_context::<Filter>(&cx)?;
 
-    let class = if filter.as_ref() == &item {
+    let class = if *filter.read() == item {
         "selected"
     } else {
         ""
     };
 
-    let onclick = move |_| set_filter(item);
+    let onclick = move |_| *filter.write() = item;
 
     #[cfg(feature = "web")]
     {

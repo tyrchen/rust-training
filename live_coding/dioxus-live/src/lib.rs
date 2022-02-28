@@ -13,28 +13,33 @@ use dioxus::prelude::*;
 use tracing::info;
 
 pub fn app(cx: Scope) -> Element {
-    let (todos, set_todos) = use_state(&cx, || {
+    // setup global context
+    use_context_provider(&cx, || {
         let store = get_store();
         store.get()
     });
-    let (filter, set_filter) = use_state(&cx, Filter::default);
+    use_context_provider(&cx, Filter::default);
 
-    let filtered_todos = todos.get_filtered_todos(filter);
+    // consume todos / filter
+    let todos = use_context::<Todos>(&cx)?;
+    let filter = use_context::<Filter>(&cx)?;
 
-    info!("todos: {todos:?}, filtered todos: {filtered_todos:?}");
+    let filtered_todos = todos.read().get_filtered_todos(&filter.read());
+
+    info!("filtered todos: {filtered_todos:?}");
 
     cx.render(rsx! {
         section { class: "todoapp",
             style { [include_str!("style.css")] },
             div {
-                rsx!(todo_input(set_todos: set_todos))
+                rsx!(todo_input())
                 ul { class: "todo-list",
                     filtered_todos.iter().map(|id| {
-                        rsx!(todo_item(key: "{id}", id: *id, set_todos: set_todos))
+                        rsx!(todo_item(key: "{id}", id: *id))
                     })
                 }
 
-                rsx!(todo_filter(set_todos: set_todos, set_filter: set_filter))
+                rsx!(todo_filter())
             }
         }
     })
