@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 console_error_panic_hook = "0.1"
-dioxus = { version = "0.1", optional = true }
+dioxus = { version = "0.2", optional = true }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1"
 tracing = "0.1"

@@ -42,22 +42,17 @@ pub fn todo_filter(cx: Scope) -> Element {
     )
 }
 
-#[derive(Props, PartialEq)]
-struct FilterItemProps {
-    pub item: Filter,
-}
-
-fn filter_item(cx: Scope<FilterItemProps>) -> Element {
-    let item = cx.props.item;
+#[inline_props]
+fn filter_item(cx: Scope, item: Filter) -> Element {
     let filter = use_context::<Filter>(&cx)?;
 
-    let class = if *filter.read() == item {
+    let class = if *filter.read() == *item {
         "selected"
     } else {
         ""
     };
 
-    let onclick = move |_| *filter.write() = item;
+    let onclick = move |_| *filter.write() = *item;
 
     #[cfg(feature = "web")]
     {
