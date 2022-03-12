@@ -1,0 +1,10 @@
+[[hooks]]
+stage = "build"
+command = "tailwindcss"
+command_arguments = [
+    "build",
+    "-i",
+    "index.css",
+    "-o",
+    "dist/.stage/tailwind.css",
+]
