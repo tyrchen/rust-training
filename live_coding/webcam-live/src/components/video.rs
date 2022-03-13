@@ -10,13 +10,9 @@ pub fn Video<G: Html>(ctx: ScopeRef) -> View<G> {
     let constraints = ctx.create_selector(|| match state.device_id.get().as_str() {
         "" => json!({
             "facingMode": "user",
-            "width": { "exact": state.get_width() },
-            "height": { "exact": state.get_height() },
         }),
         id => json!({
             "deviceId": { "exact": id },
-            "width": { "exact": state.get_width() },
-            "height": { "exact": state.get_height() },
         }),
     });
     let video_ref = ctx.create_node_ref();

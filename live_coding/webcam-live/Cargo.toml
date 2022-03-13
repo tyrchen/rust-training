@@ -33,3 +33,4 @@ features = [
 ]
 
 [workspace]
+members = [".", "src-tauri"]

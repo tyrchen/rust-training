@@ -2,7 +2,7 @@ use std::ops::Deref;
 
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
-use web_sys::{MediaDeviceInfo, MediaDeviceKind, MediaDevices};
+use web_sys::{MediaDeviceInfo, MediaDeviceKind, MediaDevices, MediaStreamConstraints};
 
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct Devices(Vec<Device>);
@@ -32,7 +32,7 @@ impl Iterator for Devices {
 
 impl Devices {
     pub async fn load() -> Self {
-        let devices = Self::get_media_devices();
+        let devices = Self::get_media_devices().await;
         let all_devices = JsFuture::from(devices.enumerate_devices().unwrap())
             .await
             .unwrap();
@@ -47,12 +47,22 @@ impl Devices {
         self.iter_by_kind(MediaDeviceKind::Audioinput)
     }
 
-    pub fn get_media_devices() -> MediaDevices {
+    pub async fn get_media_devices() -> MediaDevices {
         let window = web_sys::window().expect("no global `window` exists");
         let navigator = window.navigator();
-        navigator
+
+        let devices = navigator
             .media_devices()
-            .expect("no `navigator.mediaDevices` exists")
+            .expect("no `navigator.mediaDevices` exists");
+
+        let media = JsFuture::from(
+            devices
+                .get_user_media_with_constraints(&MediaStreamConstraints::new().video(&true.into()))
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+        devices
     }
 
     fn iter_by_kind(&self, kind: MediaDeviceKind) -> impl Iterator<Item = &Device> {

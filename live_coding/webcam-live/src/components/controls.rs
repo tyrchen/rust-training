@@ -1,4 +1,5 @@
 use sycamore::prelude::*;
+use tracing::info;
 use wasm_bindgen::JsCast;
 use web_sys::{Event, HtmlSelectElement};
 
@@ -8,11 +9,12 @@ use crate::AppState;
 pub fn Controls<'a, G: Html>(ctx: ScopeRef<'a>, show_controls: &'a Signal<bool>) -> View<G> {
     let state = ctx.use_context::<AppState>();
     let devices = ctx.create_memo(|| state.devices.get().video_devices().cloned().collect());
+    info!("devices: {:?}", devices);
     let visible = ctx.create_memo(move || match *show_controls.get() {
         true => "visible",
         false => "invisible",
     });
-    let class = || format!("absolute bottom-2 p-5 {}", visible.get());
+    let class = || format!("absolute bottom-2 p-5 w-full {}", visible.get());
     view! {ctx,
         div(class=class()) {
             div(class="flex justify-center") {
