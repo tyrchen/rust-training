@@ -1,8 +1,8 @@
 mod controls;
 mod video;
 
-use crate::AppState;
-use sycamore::prelude::*;
+use crate::{set_window_decorations, AppState};
+use sycamore::{futures::ScopeSpawnFuture, prelude::*};
 use tracing::info;
 use wasm_bindgen::{intern, prelude::*, JsCast};
 
@@ -25,6 +25,28 @@ pub async fn App<G: Html>(ctx: ScopeRef<'_>) -> View<G> {
             let height = window.inner_height().unwrap().as_f64().unwrap() as u32;
             state.dimensions.set((width, height));
             info!("Window resize: {}x{}", width, height);
+        }),
+    );
+
+    window_event_lisener(
+        ctx,
+        "mouseover",
+        Box::new(move |_| {
+            ctx.spawn_future(async move {
+                info!("## window mouseover");
+                set_window_decorations(true).await;
+            })
+        }),
+    );
+
+    window_event_lisener(
+        ctx,
+        "mouseout",
+        Box::new(move |_| {
+            ctx.spawn_future(async move {
+                info!("** window mouseout");
+                set_window_decorations(false).await;
+            })
         }),
     );
 

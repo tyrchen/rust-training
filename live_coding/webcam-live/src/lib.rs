@@ -2,10 +2,14 @@ mod components;
 mod devices;
 mod video_stream;
 
+use std::fmt::Result;
+
 pub use components::*;
 pub use devices::Devices;
-use sycamore::prelude::*;
 pub use video_stream::VideoStream;
+
+use sycamore::prelude::*;
+use wasm_bindgen::prelude::*;
 
 #[derive(Debug)]
 pub struct AppState {
@@ -30,4 +34,10 @@ impl AppState {
     pub fn get_height(&self) -> u32 {
         self.dimensions.get().1
     }
+}
+
+#[wasm_bindgen(module = "/glue.js")]
+extern "C" {
+    #[wasm_bindgen(js_name = "invokeSetWindowDecorations")]
+    pub async fn set_window_decorations(decorations: bool);
 }
