@@ -1,0 +1,20 @@
+[package]
+name = "arc-swap-live"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+arc-swap = "1"
+axum = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "0.8"
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+
+
+
+
+[workspace]
