@@ -1,0 +1,26 @@
+[package]
+name = "tonic-live"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1"
+arc-swap = "1"
+chrono = "0.4"
+dashmap = "5"
+futures = "0.3"
+lazy_static = "1"
+serde = { version = "1.0", features = ["derive"] }
+prost = "0.9"
+tonic = "0.6"
+tokio = { version = "1", features = ["full"] }
+tokio-stream = "0.1"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+
+[build-dependencies]
+tonic-build = "0.6"
+
+[workspace]
