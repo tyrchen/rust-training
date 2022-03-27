@@ -27,4 +27,9 @@ impl JsRuntimeState {
         let ctx = &state.borrow().context;
         ctx.as_ref().unwrap().clone()
     }
+
+    pub fn drop_context(isolate: &mut Isolate) {
+        let state = isolate.get_slot::<JsRuntimeStateRef>().unwrap().clone();
+        state.borrow_mut().context.take();
+    }
 }
