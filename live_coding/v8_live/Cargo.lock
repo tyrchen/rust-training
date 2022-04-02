@@ -736,9 +736,9 @@ dependencies = [
 
 [[package]]
 name = "serde_v8"
-version = "0.37.0"
+version = "0.38.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c83878134590f4d50ceb03f257dbd01646ffe675e8022bcd980365c3f20028d5"
+checksum = "45bf7930e5305b5d76c3f683d7835168feb6ea187207eaae6a21a9a0881bd0e5"
 dependencies = [
  "serde",
  "serde_bytes",
@@ -951,6 +951,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_v8",
+ "tokio",
  "v8",
 ]
 
