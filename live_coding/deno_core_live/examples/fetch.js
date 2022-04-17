@@ -3,6 +3,10 @@ function print(data) {
 }
 
 print("starting to fetch...");
-let res = await fetch("https://www.google.com");
+let res = await fetch({
+  url: "https://jsonplaceholder.typicode.com/todos/1",
+  method: "GET",
+});
 print(`status: ${res.status}`);
-print(`headers: ${JSON.stringify(res.headers)}`);
+print(`headers: ${JSON.stringify(res.headers, null, 2)}`);
+print(`body: ${JSON.stringify(res.json(), null, 2)}`);

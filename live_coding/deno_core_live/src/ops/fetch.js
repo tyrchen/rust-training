@@ -13,7 +13,18 @@
     } else {
       throw new Error("Invalid fetch args, should be string or object");
     }
-    return await Deno.core.opAsync("op_fetch", args);
+    let res = await Deno.core.opAsync("op_fetch", args);
+    res.text = () => {
+      let body = res.body;
+      if (!body) return null;
+      return Deno.core.opSync("op_decode_utf8", body);
+    };
+    res.json = () => {
+      let text = res.text();
+      if (!text) return null;
+      return JSON.parse(text);
+    };
+    return res;
   }
 
   window.fetch = fetch;

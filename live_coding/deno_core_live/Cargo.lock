@@ -101,6 +101,7 @@ dependencies = [
 name = "deno_core_live"
 version = "0.1.0"
 dependencies = [
+ "bytes",
  "deno_core",
  "lazy_static",
  "reqwest",
