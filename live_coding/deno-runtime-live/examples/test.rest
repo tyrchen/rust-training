@@ -1,0 +1,26 @@
+### Call home API
+
+GET http://localhost:1447
+Accept: application/json
+
+### Call Todo API
+
+### Get all todos
+
+GET http://localhost:1447/todos
+Accept: application/json
+
+### Post a todo
+
+POST http://localhost:1447/todos
+Accept: application/json
+Content-Type: application/json
+
+{
+    "title": "Deno code review",
+    "complete": false
+}
+
+### Deno server
+
+GET http://localhost:8080

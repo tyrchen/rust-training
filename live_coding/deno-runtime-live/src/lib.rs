@@ -52,7 +52,6 @@ impl Default for MainWorkerOptions {
             runtime_version: "x".to_string(),
             ts_version: "x".to_string(),
             unstable: false,
-            apply_source_maps: true,
         };
         Self(WorkerOptions {
             bootstrap,
@@ -64,7 +63,6 @@ impl Default for MainWorkerOptions {
             module_loader: Rc::new(FsModuleLoader),
             create_web_worker_cb,
             web_worker_preload_module_cb,
-            js_error_create_fn: None,
             maybe_inspector_server: None,
             should_break_on_first_statement: false,
             get_error_class_fn: Some(&get_error_class_name),
@@ -73,6 +71,9 @@ impl Default for MainWorkerOptions {
             broadcast_channel: InMemoryBroadcastChannel::default(),
             shared_array_buffer_store: None,
             compiled_wasm_module_store: None,
+            format_js_error_fn: None,
+            source_map_getter: None,
+            stdio: Default::default(),
         })
     }
 }
