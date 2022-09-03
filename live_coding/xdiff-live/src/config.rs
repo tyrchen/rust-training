@@ -49,6 +49,6 @@ impl DiffProfile {
         let text1 = res1.get_text(&self.res).await?;
         let text2 = res2.get_text(&self.res).await?;
 
-        Ok(diff_text(&text1, &text2)?)
+        diff_text(&text1, &text2)
     }
 }

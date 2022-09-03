@@ -91,7 +91,7 @@ impl ResponseExt {
 
         let mut output = get_header_text(&res, &profile.skip_headers)?;
 
-        let content_type = get_content_type(&res.headers());
+        let content_type = get_content_type(res.headers());
         let text = res.text().await?;
 
         match content_type.as_deref() {
@@ -125,15 +125,13 @@ fn get_header_text(res: &Response, skip_headers: &[String]) -> Result<String> {
 
 fn filter_json(text: &str, skip: &[String]) -> Result<String> {
     let mut json: serde_json::Value = serde_json::from_str(text)?;
-    match json {
-        serde_json::Value::Object(ref mut obj) => {
-            for k in skip {
-                obj.remove(k);
-            }
+
+    // For now we just ignore non-object values, we don't know how to filter.
+    // In future, we might support array of objects
+    if let serde_json::Value::Object(ref mut obj) = json {
+        for k in skip {
+            obj.remove(k);
         }
-        _ =>
-            // For now we just ignore non-object values, we don't know how to filter. In future, we might support array of objects
-            {}
     }
 
     Ok(serde_json::to_string_pretty(&json)?)
@@ -142,7 +140,5 @@ fn filter_json(text: &str, skip: &[String]) -> Result<String> {
 fn get_content_type(headers: &HeaderMap) -> Option<String> {
     headers
         .get(header::CONTENT_TYPE)
-        .map(|v| v.to_str().unwrap().split(';').next())
-        .flatten()
-        .map(|v| v.to_string())
+        .and_then(|v| v.to_str().unwrap().split(';').next().map(|v| v.to_string()))
 }
