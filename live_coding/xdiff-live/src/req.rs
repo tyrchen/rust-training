@@ -46,6 +46,26 @@ impl RequestProfile {
         Ok(ResponseExt(res))
     }
 
+    pub(crate) fn validate(&self) -> Result<()> {
+        if let Some(params) = self.params.as_ref() {
+            if !params.is_object() {
+                return Err(anyhow::anyhow!(
+                    "Params must be an object but got\n{}",
+                    serde_yaml::to_string(params)?
+                ));
+            }
+        }
+        if let Some(body) = self.body.as_ref() {
+            if !body.is_object() {
+                return Err(anyhow::anyhow!(
+                    "Body must be an object but got\n{}",
+                    serde_yaml::to_string(body)?
+                ));
+            }
+        }
+        Ok(())
+    }
+
     pub fn generate(&self, args: &ExtraArgs) -> Result<(HeaderMap, serde_json::Value, String)> {
         let mut headers = self.headers.clone();
         let mut query = self.params.clone().unwrap_or_else(|| json!({}));

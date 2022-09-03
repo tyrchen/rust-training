@@ -26,13 +26,8 @@ rust:
       user-agent: Aloha
     params:
       hello: world
+    body: "abcd"
   req2:
     method: GET
     url: https://www.rust-lang.org/
     params: {}
-  res:
-    skip_headers:
-      - set-cookie
-      - date
-      - via
-      - x-amz-cf-id
