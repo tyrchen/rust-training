@@ -7,7 +7,7 @@ pub use config::{DiffConfig, DiffProfile, ResponseProfile};
 pub use req::RequestProfile;
 pub use utils::diff_text;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct ExtraArgs {
     pub headers: Vec<(String, String)>,
     pub query: Vec<(String, String)>,

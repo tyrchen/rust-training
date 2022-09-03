@@ -16,7 +16,7 @@ pub struct RequestProfile {
     #[serde(with = "http_serde::method", default)]
     pub method: Method,
     pub url: Url,
-    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[serde(skip_serializing_if = "empty_json_value", default)]
     pub params: Option<serde_json::Value>,
     #[serde(
         skip_serializing_if = "HeaderMap::is_empty",
@@ -24,14 +24,36 @@ pub struct RequestProfile {
         default
     )]
     pub headers: HeaderMap,
-    #[serde(skip_serializing_if = "Option::is_none", default)]
+    #[serde(skip_serializing_if = "empty_json_value", default)]
     pub body: Option<serde_json::Value>,
 }
 
 #[derive(Debug)]
 pub struct ResponseExt(Response);
 
+fn empty_json_value(v: &Option<serde_json::Value>) -> bool {
+    v.as_ref().map_or(true, |v| {
+        v.is_null() || (v.is_object() && v.as_object().unwrap().is_empty())
+    })
+}
+
 impl RequestProfile {
+    pub fn new(
+        method: Method,
+        url: Url,
+        params: Option<serde_json::Value>,
+        headers: HeaderMap,
+        body: Option<serde_json::Value>,
+    ) -> Self {
+        Self {
+            method,
+            url,
+            params,
+            headers,
+            body,
+        }
+    }
+
     pub async fn send(&self, args: &ExtraArgs) -> Result<ResponseExt> {
         let (headers, query, body) = self.generate(args)?;
         let client = Client::new();
@@ -126,6 +148,15 @@ impl ResponseExt {
 
         Ok(output)
     }
+
+    pub fn get_header_keys(&self) -> Vec<String> {
+        let res = &self.0;
+        let headers = res.headers();
+        headers
+            .iter()
+            .map(|(k, _)| k.as_str().to_string())
+            .collect()
+    }
 }
 
 fn get_header_text(res: &Response, skip_headers: &[String]) -> Result<String> {
@@ -161,4 +192,26 @@ fn get_content_type(headers: &HeaderMap) -> Option<String> {
     headers
         .get(header::CONTENT_TYPE)
         .and_then(|v| v.to_str().unwrap().split(';').next().map(|v| v.to_string()))
+}
+
+impl FromStr for RequestProfile {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self> {
+        let mut url = Url::parse(s)?;
+        let qs = url.query_pairs();
+        let mut params = json!({});
+        for (k, v) in qs {
+            params[&*k] = v.parse()?;
+        }
+        url.set_query(None);
+
+        Ok(RequestProfile::new(
+            Method::GET,
+            url,
+            Some(params),
+            HeaderMap::new(),
+            None,
+        ))
+    }
 }
