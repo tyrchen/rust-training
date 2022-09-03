@@ -1,0 +1,22 @@
+[package]
+name = "xdiff-live"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.63"
+clap = { version = "3.2.20", features = ["derive"] }
+console = "0.15.1"
+http-serde = "1.1.0"
+reqwest = { version = "0.11.11", default-features = false, features = ["rustls-tls"] }
+serde = { version = "1.0.144", features = ["derive"] }
+serde_json = "1.0.85"
+serde_urlencoded = "0.7.1"
+serde_yaml = "0.9.11"
+similar = { version = "2.2.0", features = ["inline"] }
+tokio = { version = "1.21.0", features = ["full"] }
+url = { version = "2.2.2", features = ["serde"] }
+
+[workspace]
