@@ -57,13 +57,17 @@ pub fn diff_text(text1: &str, text2: &str) -> Result<String> {
     Ok(output)
 }
 
-pub fn highlight_text(text: &str, extension: &str) -> Result<String> {
+pub fn highlight_text(text: &str, extension: &str, theme: Option<&str>) -> Result<String> {
     // Load these once at the start of your program
     let ps = SyntaxSet::load_defaults_newlines();
     let ts = ThemeSet::load_defaults();
 
-    let syntax = ps.find_syntax_by_extension(extension).unwrap();
-    let mut h = HighlightLines::new(syntax, &ts.themes["base16-ocean.dark"]);
+    let syntax = if let Some(s) = ps.find_syntax_by_extension(extension) {
+        s
+    } else {
+        ps.find_syntax_plain_text()
+    };
+    let mut h = HighlightLines::new(syntax, &ts.themes[theme.unwrap_or("base16-ocean.dark")]);
 
     let mut output = String::new();
 

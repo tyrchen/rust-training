@@ -4,7 +4,8 @@ use dialoguer::{theme::ColorfulTheme, Input, MultiSelect};
 use std::io::Write;
 use xdiff_live::{
     cli::{Action, Args, RunArgs},
-    highlight_text, DiffConfig, DiffProfile, ExtraArgs, RequestProfile, ResponseProfile,
+    highlight_text, DiffConfig, DiffProfile, ExtraArgs, LoadConfig, RequestProfile,
+    ResponseProfile,
 };
 
 #[tokio::main]
@@ -53,7 +54,7 @@ async fn parse() -> Result<()> {
 
     let stdout = std::io::stdout();
     let mut stdout = stdout.lock();
-    write!(stdout, "---\n{}", highlight_text(&result, "yaml")?)?;
+    write!(stdout, "---\n{}", highlight_text(&result, "yaml", None)?)?;
     Ok(())
 }
 

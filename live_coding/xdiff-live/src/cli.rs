@@ -1,7 +1,6 @@
+use crate::ExtraArgs;
 use anyhow::{anyhow, Result};
 use clap::{Parser, Subcommand};
-
-use crate::ExtraArgs;
 
 /// Diff two http requests and compare the difference of the responses
 #[derive(Parser, Debug, Clone)]

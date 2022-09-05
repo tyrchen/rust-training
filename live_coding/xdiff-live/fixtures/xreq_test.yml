@@ -1,0 +1,15 @@
+---
+todo:
+  method: GET
+  url: https://jsonplaceholder.typicode.com/todos/1
+  params:
+    a: 1
+    b: 2
+    c[0]: 3
+    c[1]: 4
+todo-new:
+  url: https://jsonplaceholder.typicode.com/todos
+  method: POST
+  body:
+    title: 'hello'
+    completed: false
