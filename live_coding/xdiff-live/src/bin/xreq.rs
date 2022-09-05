@@ -5,21 +5,21 @@ use std::fmt::Write as _;
 use std::io::Write as _;
 use xdiff_live::{
     cli::{Action, Args, RunArgs},
-    get_body_text, get_header_text, get_status_text, highlight_text, LoadConfig, RequestConfig,
-    RequestProfile,
+    get_body_text, get_header_text, get_status_text, highlight_text, process_error_output,
+    LoadConfig, RequestConfig, RequestProfile,
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let args = Args::parse();
 
-    match args.action {
-        Action::Run(args) => run(args).await?,
-        Action::Parse => parse().await?,
+    let result = match args.action {
+        Action::Run(args) => run(args).await,
+        Action::Parse => parse().await,
         _ => panic!("Not implemented"),
-    }
+    };
 
-    Ok(())
+    process_error_output(result)
 }
 
 async fn run(args: RunArgs) -> Result<()> {
@@ -45,14 +45,19 @@ async fn run(args: RunArgs) -> Result<()> {
 
     let mut output = String::new();
 
-    writeln!(&mut output, "Url: {}\n", url)?;
-    write!(&mut output, "{}", status)?;
-    write!(
-        &mut output,
-        "{}",
-        highlight_text(&headers, "yaml", Some("InspiredGitHub"))?
-    )?;
-    write!(&mut output, "{}", highlight_text(&body, "json", None)?)?;
+    if atty::is(atty::Stream::Stdout) {
+        writeln!(&mut output, "Url: {}\n", url)?;
+        write!(&mut output, "{}", status)?;
+        write!(
+            &mut output,
+            "{}",
+            highlight_text(&headers, "yaml", Some("InspiredGitHub"))?
+        )?;
+
+        write!(&mut output, "{}", highlight_text(&body, "json", None)?)?;
+    } else {
+        write!(&mut output, "{}", body)?;
+    }
 
     let stdout = std::io::stdout();
     let mut stdout = stdout.lock();
@@ -76,6 +81,11 @@ async fn parse() -> Result<()> {
 
     let stdout = std::io::stdout();
     let mut stdout = stdout.lock();
-    write!(stdout, "---\n{}", highlight_text(&result, "yaml", None)?)?;
+    if atty::is(atty::Stream::Stdout) {
+        write!(stdout, "---\n{}", highlight_text(&result, "yaml", None)?)?;
+    } else {
+        write!(stdout, "{}", result)?;
+    }
+
     Ok(())
 }

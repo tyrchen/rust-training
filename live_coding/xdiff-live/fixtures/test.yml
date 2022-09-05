@@ -34,6 +34,7 @@ todo1:
   req1:
     method: GET
     url: https://jsonplaceholder.typicode.com/todos/1
+    params: "abcd"
   req2:
     method: GET
     url: https://jsonplaceholder.typicode.com/todos/2
