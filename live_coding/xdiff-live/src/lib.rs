@@ -14,3 +14,26 @@ pub struct ExtraArgs {
     pub query: Vec<(String, String)>,
     pub body: Vec<(String, String)>,
 }
+
+impl ExtraArgs {
+    pub fn new_with_headers(headers: Vec<(String, String)>) -> Self {
+        Self {
+            headers,
+            ..Default::default()
+        }
+    }
+
+    pub fn new_with_query(query: Vec<(String, String)>) -> Self {
+        Self {
+            query,
+            ..Default::default()
+        }
+    }
+
+    pub fn new_with_body(body: Vec<(String, String)>) -> Self {
+        Self {
+            body,
+            ..Default::default()
+        }
+    }
+}
