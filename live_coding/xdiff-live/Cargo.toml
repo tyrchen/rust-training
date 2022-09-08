@@ -34,3 +34,4 @@ url = { version = "2.2.2", features = ["serde"] }
 
 [dev-dependencies]
 mockito = "0.31.0"
+trycmd = "0.13.6"

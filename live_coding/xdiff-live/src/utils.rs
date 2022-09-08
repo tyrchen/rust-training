@@ -99,3 +99,29 @@ pub fn process_error_output(result: Result<()>) -> Result<()> {
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use serde_json::json;
+
+    use super::*;
+
+    #[test]
+    fn diff_text_should_work() {
+        let text1 = "foo\nbar";
+        let text2 = "foo\nbaz";
+        let expected = include_str!("../fixtures/diff1.txt");
+        assert_eq!(diff_text(text1, text2).unwrap(), expected);
+    }
+
+    #[test]
+    fn highlight_text_should_work() {
+        let v = json!({
+            "foo": "bar",
+            "baz": "qux"
+        });
+        let text = serde_json::to_string_pretty(&v).unwrap();
+        let expected = include_str!("../fixtures/highlight1.txt");
+        assert_eq!(highlight_text(&text, "json", None).unwrap(), expected);
+    }
+}
