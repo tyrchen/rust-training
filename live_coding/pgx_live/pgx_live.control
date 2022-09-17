@@ -1,0 +1,5 @@
+comment = 'pgx_live:  Created by pgx'
+default_version = '@CARGO_VERSION@'
+module_pathname = '$libdir/pgx_live'
+relocatable = false
+superuser = false
