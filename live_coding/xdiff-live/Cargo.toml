@@ -27,7 +27,7 @@ serde_urlencoded = "0.7.1"
 serde_yaml = "0.9.11"
 similar = { version = "2.2.0", features = ["inline"] }
 syntect = "5.0.0"
-tokio = { version = "1.21.0", features = ["full"] }
+tokio = { version = "1.24.2", features = ["full"] }
 url = { version = "2.2.2", features = ["serde"] }
 
 [workspace]
