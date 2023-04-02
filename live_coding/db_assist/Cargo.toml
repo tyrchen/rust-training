@@ -8,18 +8,25 @@ crate-type = ["cdylib"]
 
 [features]
 default = ["pg13"]
-pg11 = ["pgx/pg11", "pgx-tests/pg11" ]
-pg12 = ["pgx/pg12", "pgx-tests/pg12" ]
-pg13 = ["pgx/pg13", "pgx-tests/pg13" ]
-pg14 = ["pgx/pg14", "pgx-tests/pg14" ]
-pg15 = ["pgx/pg15", "pgx-tests/pg15" ]
+pg11 = ["pgx/pg11", "pgx-tests/pg11"]
+pg12 = ["pgx/pg12", "pgx-tests/pg12"]
+pg13 = ["pgx/pg13", "pgx-tests/pg13"]
+pg14 = ["pgx/pg14", "pgx-tests/pg14"]
+pg15 = ["pgx/pg15", "pgx-tests/pg15"]
 pg_test = []
 
 [dependencies]
+askama = "0.12.0"
+async-openai = "0.10.2"
+futures = "0.3.28"
 pgx = "=0.7.4"
 
 [dev-dependencies]
+anyhow = "1.0.70"
+db-schema = "0.2.1"
 pgx-tests = "=0.7.4"
+sqlx = { version = "0.6.3", features = ["postgres", "runtime-tokio-rustls"] }
+tokio = { version = "1.27.0", features = ["rt", "rt-multi-thread", "macros"] }
 
 [profile.dev]
 panic = "unwind"
