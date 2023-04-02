@@ -1,0 +1,5 @@
+comment = 'db_assist:  Created by pgx'
+default_version = '@CARGO_VERSION@'
+module_pathname = '$libdir/db_assist'
+relocatable = false
+superuser = true
