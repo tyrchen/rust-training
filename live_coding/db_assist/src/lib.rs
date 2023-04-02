@@ -1,3 +1,7 @@
+mod assist;
+
+pub use assist::db_assist;
+
 use pgx::prelude::*;
 
 pgx::pg_module_magic!();
@@ -16,10 +20,9 @@ mod tests {
     fn test_hello_db_assist() {
         assert_eq!("Hello, db_assist", crate::hello_db_assist());
     }
-
 }
 
-/// This module is required by `cargo pgx test` invocations. 
+/// This module is required by `cargo pgx test` invocations.
 /// It must be visible at the root of your extension crate.
 #[cfg(test)]
 pub mod pg_test {
